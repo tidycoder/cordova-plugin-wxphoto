@@ -1,15 +1,10 @@
 
-#import "WXPhoto.h"
+#import "CDVWXPhoto.h"
 #import "TZImagePickerController.h"
-#import "UIView+Layout.h"
-#import "TZTestCell.h"
 
 
 @implementation CDVWXPhoto:CDVPlugin
 
-- (void)pluginInitialize
-{
-}
 
 - (void)pick:(CDVInvokedUrlCommand *)command
 {
