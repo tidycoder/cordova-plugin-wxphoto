@@ -38,9 +38,9 @@
             <header-file src="src/ios/UIView+Layout.h" />
             <source-file src="src/ios/UIView+Layout.m" />
 
-            <resource-file src="src/ios/MMVideoPreviewPlay@2x.png" />
-            <resource-file src="src/ios/MMVideoPreviewPlayHL@2x.png" />
-            <resource-file src="src/ios/TZAlbumCell.xib" />
+            <resource-file src="src/ios/Resource/MMVideoPreviewPlay@2x.png" />
+            <resource-file src="src/ios/Resource/MMVideoPreviewPlayHL@2x.png" />
+            <resource-file src="src/ios/Resource/TZAlbumCell.xib" />
 
 
             <!-- other required frameworks -->
