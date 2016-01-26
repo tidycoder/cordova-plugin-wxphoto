@@ -6,6 +6,7 @@
 //
 
 #import <Cordova/CDV.h>
+#import "TZImagePickerController.h"
 
 @interface CDVWXPhoto:CDVPlugin <TZImagePickerControllerDelegate>
 

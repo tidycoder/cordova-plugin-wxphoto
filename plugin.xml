@@ -37,10 +37,25 @@
             <source-file src="src/ios/TZPhotoPreviewController.m" />
             <header-file src="src/ios/UIView+Layout.h" />
             <source-file src="src/ios/UIView+Layout.m" />
+            <header-file src="src/ios/TZVideoPlayerController.h" />
+            <source-file src="src/ios/TZVideoPlayerController.m" />
 
             <resource-file src="src/ios/Resource/MMVideoPreviewPlay@2x.png" />
             <resource-file src="src/ios/Resource/MMVideoPreviewPlayHL@2x.png" />
+            <resource-file src="src/ios/Resource/navi_back@2x.png" />
+            <resource-file src="src/ios/Resource/photo_def_photoPickerVc@2x.png" />
+            <resource-file src="src/ios/Resource/photo_def_previewVc@2x.png" />
+            <resource-file src="src/ios/Resource/photo_number_icon@2x.png" />
+            <resource-file src="src/ios/Resource/photo_original_def@2x.png" />
+            <resource-file src="src/ios/Resource/photo_original_sel@2x.png" />
+            <resource-file src="src/ios/Resource/photo_sel_photoPickerVc@2x.png" />
+            <resource-file src="src/ios/Resource/photo_sel_previewVc@2x.png" />
+            <resource-file src="src/ios/Resource/preview_number_icon@2x.png" />
+            <resource-file src="src/ios/Resource/preview_original_def@2x.png" />
+            <resource-file src="src/ios/Resource/TableViewArrow@2x.png" />
+            <resource-file src="src/ios/Resource/VideoSendIcon@2x.png" />
             <resource-file src="src/ios/Resource/TZAlbumCell.xib" />
+            <resource-file src="src/ios/Resource/TZAssetCell.xib" />
 
 
             <!-- other required frameworks -->
