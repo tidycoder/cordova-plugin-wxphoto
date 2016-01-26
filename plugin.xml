@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+            id="cordova-plugin-wxphoto" version="0.0.1">
+        <name>wxphoto</name>
+        <description>Cordova WxPhoto Plugin</description>
+        <license>Apache 2.0</license>
+        <keywords>cordova,wxphoto</keywords>
+        <repo>https://github.com/tidycoder/cordova-plugin-wxphoto.git</repo>
+        <js-module src="www/wxphoto.js" name="wxphoto">
+            <clobbers target="wxphoto" />
+        </js-module>
+        <platform name="ios">
+            <config-file target="config.xml" parent="/*">
+                <feature name="WXPhoto">
+                    <param name="ios-package" value="CDVWXPhoto" />
+                    <param name="onload" value="true" />
+                </feature>
+            </config-file>
+
+            <!-- plugin source code -->
+            <header-file src="src/ios/CDVWXPhoto.h" />
+            <source-file src="src/ios/CDVWXPhoto.m" />
+
+            <header-file src="src/ios/TZAssetCell.h" />
+            <source-file src="src/ios/TZAssetCell.m" />
+            <header-file src="src/ios/TZAssetModel.h" />
+            <source-file src="src/ios/TZAssetModel.m" />
+            <header-file src="src/ios/TZImageManager.h" />
+            <source-file src="src/ios/TZImageManager.m" />
+            <header-file src="src/ios/TZImagePickerController.h" />
+            <source-file src="src/ios/TZImagePickerController.m" />
+            <header-file src="src/ios/TZPhotoPickerController.h" />
+            <source-file src="src/ios/TZPhotoPickerController.m" />
+            <header-file src="src/ios/TZPhotoPreviewCell.h" />
+            <source-file src="src/ios/TZPhotoPreviewCell.m" />
+            <header-file src="src/ios/TZPhotoPreviewController.h" />
+            <source-file src="src/ios/TZPhotoPreviewController.m" />
+            <header-file src="src/ios/UIView+Layout.h" />
+            <source-file src="src/ios/UIView+Layout.m" />
+
+            <resource-file src="src/ios/MMVideoPreviewPlay@2x.png" />
+            <resource-file src="src/ios/MMVideoPreviewPlayHL@2x.png" />
+            <resource-file src="src/ios/TZAlbumCell.xib" />
+
+
+            <!-- other required frameworks -->
+            <framework src="SystemConfiguration.framework" />
+            <framework src="CoreTelephony.framework" />
+            <framework src="QuartzCore.framework" />
+            <framework src="CoreText.framework" />
+            <framework src="CoreGraphics.framework" />
+            <framework src="UIKit.framework" />
+            <framework src="Foundation.framework" />
+            <framework src="CFNetwork.framework" />
+            <framework src="CoreMotion.framework" />
+            <framework src="libz.dylib" />
+            <framework src="libc++.dylib" />
+        </platform>
+    </plugin>
