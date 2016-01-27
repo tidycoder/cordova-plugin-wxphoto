@@ -9,8 +9,10 @@
 - (void)pick:(CDVInvokedUrlCommand *)command
 {
 	self.currentCallbackId = command.callbackId;
-    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:1 delegate:self];
-    [self.viewController presentViewController:imagePickerVc animated:YES completion:nil];
+	[self.commandDelegate runInBackground:^{
+	    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:1 delegate:self];
+	    [self.viewController presentViewController:imagePickerVc animated:YES completion:nil];
+	}]
 }
 
 /// 用户点击了取消
