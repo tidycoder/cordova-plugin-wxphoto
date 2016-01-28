@@ -29,16 +29,17 @@
     // NSString* url = [[infos firstObject] objectForKey:@"PHImageFileURLKey"];
     
 	 __weak CDVWXPhoto* weakSelf = self;
-    dispatch_block_t invoke = ^(void) {
-        __block CDVPluginResult* pluginResult = nil;
-        NSDictionary* dic = [infos firstObject];
-        NSString* url = [[dic objectForKey:@"PHImageFileURLKey"] absoluteString];
-        NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
-    		url, @"url", [NSNumber numberWithBool:isOrigin], @"isOrigin", nil];
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+    NSDictionary* dic = [infos firstObject];
+    NSURL* nsurl = [dic objectForKey:@"PHImageFileURLKey"];
+    NSString* url = nsurl.absoluteString;
+    NSLog(@"image file url: %@", url);
+    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
+                          url, @"url", [NSNumber numberWithBool:isOrigin], @"isOrigin", nil];
+
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+    [[picker presentingViewController] dismissViewControllerAnimated:YES completion:^(void) {
         [weakSelf.commandDelegate sendPluginResult:pluginResult callbackId:weakSelf.currentCallbackId];
-    };
-    [[picker presentingViewController] dismissViewControllerAnimated:YES completion:invoke];
+    }];
 }
 
 @end
