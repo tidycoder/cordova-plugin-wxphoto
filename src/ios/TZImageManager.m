@@ -278,13 +278,14 @@
 
 /// Get photo 获得照片本身
 - (void)getPhotoWithAsset:(id)asset completion:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))completion {
-    [self getPhotoWithAsset:asset photoWidth:[UIScreen mainScreen].bounds.size.width completion:completion];
+    [self getPhotoWithAsset:asset photoWidth:[UIScreen mainScreen].bounds.size.width clampAtRatio:0.0f completion:completion];
 }
 
-- (void)getPhotoWithAsset:(id)asset photoWidth:(CGFloat)photoWidth completion:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))completion {
+- (void)getPhotoWithAsset:(id)asset photoWidth:(CGFloat)photoWidth clampAtRatio:(CGFloat)clampAtRatio completion:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))completion {
     if ([asset isKindOfClass:[PHAsset class]]) {
         PHAsset *phAsset = (PHAsset *)asset;
         CGFloat aspectRatio = phAsset.pixelWidth / (CGFloat)phAsset.pixelHeight;
+        if (aspectRatio < clampAtRatio) aspectRatio = clampAtRatio;
         CGFloat multiple = [UIScreen mainScreen].scale;
         CGFloat pixelWidth = photoWidth * multiple;
         CGFloat pixelHeight = pixelWidth / aspectRatio;
@@ -316,7 +317,7 @@
 
 - (void)getPostImageWithAlbumModel:(TZAlbumModel *)model completion:(void (^)(UIImage *))completion {
     if (iOS8Later) {
-        [[TZImageManager manager] getPhotoWithAsset:[model.result lastObject] photoWidth:80 completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+        [[TZImageManager manager] getPhotoWithAsset:[model.result lastObject] photoWidth:80 clampAtRatio:0.5f completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
             if (completion) completion(photo);
         }];
     } else {
