@@ -196,7 +196,7 @@
     
     for (NSInteger i = 0; i < _selectedPhotoArr.count; i++) {
         TZAssetModel *model = _selectedPhotoArr[i];
-        [[TZImageManager manager] getPhotoWithAsset:model.asset completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+        [[TZImageManager manager] getOriginPhotoWithAsset:model.asset completion:^(NSData* photo, NSDictionary *info, BOOL isDegraded) {
             if (isDegraded) return;
             if (photo) [photos replaceObjectAtIndex:i withObject:photo];
             if (info) [infoArr replaceObjectAtIndex:i withObject:info];
