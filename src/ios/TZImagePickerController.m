@@ -63,7 +63,7 @@
         // Allow user picking original photo and video, you also can set No after this method
         // 默认准许用户选择原图和视频, 你也可以在这个方法后置为NO
         _allowPickingOriginalPhoto = YES;
-        _allowPickingVideo = YES;
+        _allowPickingVideo = NO;
         
         if (![[TZImageManager manager] authorizationStatusAuthorized]) {
             _tipLable = [[UILabel alloc] init];
