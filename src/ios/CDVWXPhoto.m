@@ -1,6 +1,8 @@
 
 #import "CDVWXPhoto.h"
 #import "TZImagePickerController.h"
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <Photos/Photos.h>
 
 
 @implementation CDVWXPhoto:CDVPlugin
@@ -25,17 +27,27 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.currentCallbackId];
 }
 
+-(long long) fileSizeAtPath:(NSString*) filePath{
+    NSFileManager* manager = [NSFileManager defaultManager];
+    if ([manager fileExistsAtPath:filePath]){
+        return [[manager attributesOfItemAtPath:filePath error:nil] fileSize];
+    }
+    return 0;
+}
+
 /// 用户选择好了图片，如果assets非空，则用户选择了原图。
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray *)photos sourceAssets:(NSArray *)assets infos:(NSArray<NSDictionary *> *)infos isOrigin:(BOOL)isOrigin{
-    // NSString* url = [[infos firstObject] objectForKey:@"PHImageFileURLKey"];
+//    NSURL* url = [[infos firstObject] objectForKey:@"PHImageFileURLKey"];
+//    NSLog(@"file origin size: %lld", [self fileSizeAtPath:url]);
     // NSDictionary* dic = [infos firstObject];
     // NSURL* nsurl = [dic objectForKey:@"PHImageFileURLKey"];
     // NSString* url = nsurl.absoluteString;
     // NSLog(@"image file url: %@", url);
     
 	__weak CDVWXPhoto* weakSelf = self;
-    UIImage* image = [photos firstObject];
-    NSData* data = UIImageJPEGRepresentation(image, 1.0);
+    NSData* data = [photos firstObject];
+    PHAsset* asset = [assets firstObject];
+//    NSData* data = UIImageJPEGRepresentation(image, 0.5);
     if (data) {
         NSString* extension = @"jpg";
         NSString* filePath = [self tempFilePath:extension];
@@ -44,10 +56,12 @@
         
         // save file
         if (![data writeToFile:filePath options:NSAtomicWrite error:&err]) {
+//            NSLog(@"file size: %lld", [self fileSizeAtPath:filePath]);
             result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsString:[err localizedDescription]];
         } else {
+            NSLog(@"file size: %lld", [self fileSizeAtPath:filePath]);
             NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                  filePath, @"url", [NSNumber numberWithBool:isOrigin], @"isOrigin", nil];
+                                  filePath, @"url", [NSNumber numberWithBool:isOrigin], @"isOrigin", [NSNumber numberWithLong:asset.pixelWidth], @"width", [NSNumber numberWithLong:asset.pixelHeight], @"height", nil];
 
             result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
         }

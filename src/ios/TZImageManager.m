@@ -278,13 +278,57 @@
 
 /// Get photo 获得照片本身
 - (void)getPhotoWithAsset:(id)asset completion:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))completion {
-    [self getPhotoWithAsset:asset photoWidth:[UIScreen mainScreen].bounds.size.width completion:completion];
+    [self getPhotoWithAsset:asset photoWidth:[UIScreen mainScreen].bounds.size.width clampAtRatio:0.0f completion:completion];
 }
 
-- (void)getPhotoWithAsset:(id)asset photoWidth:(CGFloat)photoWidth completion:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))completion {
+- (void)getOriginPhotoWithAsset:(id)asset completion:(void (^)(NSData* data, NSDictionary *, BOOL isDegraded))completion {
+    if ([asset isKindOfClass:[PHAsset class]]) {
+        PHAsset *phAsset = (PHAsset *)asset;
+//        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+//        options.synchronous = YES;
+//        options.version = PHImageRequestOptionsVersionOriginal;
+//        options.resizeMode = PHImageRequestOptionsResizeModeNone;
+//        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+//
+        
+        
+        [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData *__nullable imageData, NSString *__nullable dataUTI, UIImageOrientation orientation, NSDictionary *__nullable info) {
+            BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
+            if (downloadFinined) {
+                if (completion) completion(imageData, info,[[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
+            }
+        }];
+//        [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:CGSizeMake(phAsset.pixelWidth, phAsset.pixelHeight) contentMode:PHImageContentModeAspectFit options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+//            BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
+//            if (downloadFinined) {
+//                if (completion) completion(result,info,[[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
+//            }
+//        }];
+    } else if ([asset isKindOfClass:[ALAsset class]]) {
+        ALAsset *alAsset = (ALAsset *)asset;
+        ALAssetRepresentation *assetRep = [alAsset defaultRepresentation];
+        CGImageRef thumbnailImageRef = alAsset.aspectRatioThumbnail;
+        UIImage *thumbnailImage = [UIImage imageWithCGImage:thumbnailImageRef scale:1.0 orientation:UIImageOrientationUp];
+        if (completion) completion(thumbnailImage,nil,YES);
+        
+//        if (photoWidth == [UIScreen mainScreen].bounds.size.width) {
+            dispatch_async(dispatch_get_global_queue(0,0), ^{
+                CGImageRef fullScrennImageRef = [assetRep fullScreenImage];
+                UIImage *fullScrennImage = [UIImage imageWithCGImage:fullScrennImageRef scale:1.0 orientation:UIImageOrientationUp];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (completion) completion(fullScrennImage,nil,NO);
+                });
+            });
+//        }
+    }
+}
+
+- (void)getPhotoWithAsset:(id)asset photoWidth:(CGFloat)photoWidth clampAtRatio:(CGFloat)clampAtRatio completion:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))completion {
     if ([asset isKindOfClass:[PHAsset class]]) {
         PHAsset *phAsset = (PHAsset *)asset;
         CGFloat aspectRatio = phAsset.pixelWidth / (CGFloat)phAsset.pixelHeight;
+        if (aspectRatio < clampAtRatio) aspectRatio = clampAtRatio;
         CGFloat multiple = [UIScreen mainScreen].scale;
         CGFloat pixelWidth = photoWidth * multiple;
         CGFloat pixelHeight = pixelWidth / aspectRatio;
@@ -316,7 +360,7 @@
 
 - (void)getPostImageWithAlbumModel:(TZAlbumModel *)model completion:(void (^)(UIImage *))completion {
     if (iOS8Later) {
-        [[TZImageManager manager] getPhotoWithAsset:[model.result lastObject] photoWidth:80 completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+        [[TZImageManager manager] getPhotoWithAsset:[model.result lastObject] photoWidth:80 clampAtRatio:0.5f completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
             if (completion) completion(photo);
         }];
     } else {
