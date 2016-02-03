@@ -105,6 +105,8 @@
             <source-file src="src/android/com/foamtrace/photopicker/PhotoPickerActivity.java" target-dir="src/com/foamtrace/photopicker/PhotoPickerActivity.java" />
             <source-file src="src/android/com/foamtrace/photopicker/PhotoPreviewActivity.java" target-dir="src/com/foamtrace/photopicker/PhotoPreviewActivity.java" />
             <source-file src="src/android/com/foamtrace/photopicker/SelectModel.java" target-dir="src/com/foamtrace/photopicker/SelectModel.java" />
+            <source-file src="src/android/com/foamtrace/photopicker/CDVWXPhoto.java" target-dir="src/com/foamtrace/photopicker/CDVWXPhoto.java" />
+
 
             <resource-file src="src/android/res/mipmap-hdpi/ic_action_discard.png" target="res/mipmap-hdpi/ic_action_discard.png" />
             <resource-file src="src/android/res/mipmap-mdpi/ic_action_discard.png" target="res/mipmap-mdpi/ic_action_discard.png" />
@@ -137,6 +139,11 @@
             <resource-file src="src/android/res/layout/item_preview.xml" target="res/layout/item_preview.xml" />
             <resource-file src="src/android/res/layout/item_select_image.xml" target="res/layout/item_select_image.xml" />
             <resource-file src="src/android/res/layout/photopicker_toolbar.xml" target="res/layout/photopicker_toolbar.xml" />
-
+            <resource-file src="src/android/res/values/strings.xml" target="res/values/wxstrings.xml" />
+            <resource-file src="src/android/res/values/styles.xml" target="res/values/wxstyles.xml" />
+            <framework src="com.android.support:appcompat-v7:22+" />
+            <framework src="com.android.support:design:22.+" />
+            <framework src="com.github.bumptech.glide:glide:3.6.1" />
+            <framework src="com.github.chrisbanes.photoview:library:+" />
         </platform>
     </plugin>
