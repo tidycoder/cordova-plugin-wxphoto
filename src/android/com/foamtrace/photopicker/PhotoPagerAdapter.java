@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.xinfu.uuke.R;
 
 import java.io.File;
 import java.util.ArrayList;

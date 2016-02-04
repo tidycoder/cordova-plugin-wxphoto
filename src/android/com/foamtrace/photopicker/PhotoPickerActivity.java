@@ -25,6 +25,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.foamtrace.photopicker.intent.PhotoPreviewIntent;
+import com.xinfu.uuke.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -340,7 +341,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
     private void showCameraAction() {
         try {
             Intent intent = captureManager.dispatchTakePictureIntent();
-            startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO);
+            startActivityForResult(intent, com.foamtrace.photopicker.ImageCaptureManager.REQUEST_TAKE_PHOTO);
         } catch (IOException e) {
             Toast.makeText(mCxt, R.string.msg_no_camera, Toast.LENGTH_SHORT).show();
             e.printStackTrace();

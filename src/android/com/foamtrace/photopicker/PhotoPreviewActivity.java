@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.foamtrace.photopicker.widget.ViewPagerFixed;
+import com.xinfu.uuke.R;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,7 @@ public class PhotoPreviewActivity extends AppCompatActivity implements PhotoPage
 
     private ArrayList<String> paths;
     private ViewPagerFixed mViewPager;
-    private PhotoPagerAdapter mPagerAdapter;
+    private com.foamtrace.photopicker.PhotoPagerAdapter mPagerAdapter;
     private int currentItem = 0;
 
     @Override
