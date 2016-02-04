@@ -12,7 +12,7 @@
         <platform name="ios">
             <config-file target="config.xml" parent="/*">
                 <feature name="WXPhoto">
-                    <param name="ios-package" value="com.foamtrace.photopicker.CDVWXPhoto" />
+                    <param name="ios-package" value="CDVWXPhoto" />
                     <param name="onload" value="true" />
                 </feature>
             </config-file>
@@ -74,7 +74,8 @@
         <platform name="android">
             <config-file target="res/xml/config.xml" parent="/*">
                 <feature name="WXPhoto">
-                    <param name="android-package" value="CDVWXPhoto" />
+                    <param name="android-package" value="com.foamtrace.photopicker.CDVWXPhoto" />
+                    <param name="onload" value="true" />
                 </feature>
             </config-file>
 
@@ -91,21 +92,21 @@
                     android:theme="@style/PhotoPickerTheme"/>
             </config-file>
 
-            <source-file src="src/android/com/foamtrace/photopicker/intent/PhotoPickerIntent.java" target-dir="src/com/foamtrace/photopicker/intent/PhotoPickerIntent.java" />
-            <source-file src="src/android/com/foamtrace/photopicker/intent/PhotoPreviewIntent.java" target-dir="src/com/foamtrace/photopicker/intent/PhotoPreviewIntent.java" />
-            <source-file src="src/android/com/foamtrace/photopicker/widget/ViewPagerFixed.java" target-dir="src/com/foamtrace/photopicker/widget/ViewPagerFixed.java" />
+            <source-file src="src/android/com/foamtrace/photopicker/intent/PhotoPickerIntent.java" target-dir="src/com/foamtrace/photopicker/intent" />
+            <source-file src="src/android/com/foamtrace/photopicker/intent/PhotoPreviewIntent.java" target-dir="src/com/foamtrace/photopicker/intent" />
+            <source-file src="src/android/com/foamtrace/photopicker/widget/ViewPagerFixed.java" target-dir="src/com/foamtrace/photopicker/widget" />
 
-            <source-file src="src/android/com/foamtrace/photopicker/Folder.java" target-dir="src/com/foamtrace/photopicker/Folder.java" />
-            <source-file src="src/android/com/foamtrace/photopicker/FolderAdapter.java" target-dir="src/com/foamtrace/photopicker/FolderAdapter.java" />
-            <source-file src="src/android/com/foamtrace/photopicker/Image.java" target-dir="src/com/foamtrace/photopicker/Image.java" />
-            <source-file src="src/android/com/foamtrace/photopicker/ImageCaptureManager.java" target-dir="src/com/foamtrace/photopicker/ImageCaptureManager.java" />
-            <source-file src="src/android/com/foamtrace/photopicker/ImageConfig.java" target-dir="src/com/foamtrace/photopicker/ImageConfig.java" />
-            <source-file src="src/android/com/foamtrace/photopicker/ImageGridAdapter.java" target-dir="src/com/foamtrace/photopicker/ImageGridAdapter.java" />
-            <source-file src="src/android/com/foamtrace/photopicker/PhotoPagerAdapter.java" target-dir="src/com/foamtrace/photopicker/PhotoPagerAdapter.java" />
-            <source-file src="src/android/com/foamtrace/photopicker/PhotoPickerActivity.java" target-dir="src/com/foamtrace/photopicker/PhotoPickerActivity.java" />
-            <source-file src="src/android/com/foamtrace/photopicker/PhotoPreviewActivity.java" target-dir="src/com/foamtrace/photopicker/PhotoPreviewActivity.java" />
-            <source-file src="src/android/com/foamtrace/photopicker/SelectModel.java" target-dir="src/com/foamtrace/photopicker/SelectModel.java" />
-            <source-file src="src/android/com/foamtrace/photopicker/CDVWXPhoto.java" target-dir="src/com/foamtrace/photopicker/CDVWXPhoto.java" />
+            <source-file src="src/android/com/foamtrace/photopicker/Folder.java" target-dir="src/com/foamtrace/photopicker" />
+            <source-file src="src/android/com/foamtrace/photopicker/FolderAdapter.java" target-dir="src/com/foamtrace/photopicker" />
+            <source-file src="src/android/com/foamtrace/photopicker/Image.java" target-dir="src/com/foamtrace/photopicker" />
+            <source-file src="src/android/com/foamtrace/photopicker/ImageCaptureManager.java" target-dir="src/com/foamtrace/photopicker" />
+            <source-file src="src/android/com/foamtrace/photopicker/ImageConfig.java" target-dir="src/com/foamtrace/photopicker" />
+            <source-file src="src/android/com/foamtrace/photopicker/ImageGridAdapter.java" target-dir="src/com/foamtrace/photopicker" />
+            <source-file src="src/android/com/foamtrace/photopicker/PhotoPagerAdapter.java" target-dir="src/com/foamtrace/photopicker" />
+            <source-file src="src/android/com/foamtrace/photopicker/PhotoPickerActivity.java" target-dir="src/com/foamtrace/photopicker" />
+            <source-file src="src/android/com/foamtrace/photopicker/PhotoPreviewActivity.java" target-dir="src/com/foamtrace/photopicker" />
+            <source-file src="src/android/com/foamtrace/photopicker/SelectModel.java" target-dir="src/com/foamtrace/photopicker" />
+            <source-file src="src/android/com/foamtrace/photopicker/CDVWXPhoto.java" target-dir="src/com/foamtrace/photopicker" />
 
 
             <resource-file src="src/android/res/mipmap-hdpi/ic_action_discard.png" target="res/mipmap-hdpi/ic_action_discard.png" />

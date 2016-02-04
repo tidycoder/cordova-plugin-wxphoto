@@ -20,10 +20,6 @@ public class CDVWXPhoto extends CordovaPlugin {
 
     public CallbackContext callbackContext;
 
-    @Override
-    protected void pluginInitialize() {
-        super.pluginInitialize();
-    }
 
     @Override
     public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
