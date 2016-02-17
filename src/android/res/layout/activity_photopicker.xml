@@ -50,5 +50,19 @@
             android:enabled="false"
             android:textColor="@color/action_text_color"
             android:layout_alignParentRight="true"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="原图"
+            android:textSize="@dimen/action_text_size"
+            android:id="@+id/btnOrigin"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/btnAlbum"
+            android:layout_toEndOf="@+id/btnAlbum"
+            android:checked="false"
+            android:textColor="@color/action_text_color"
+            android:singleLine="false"
+            android:shadowColor="#ffffff" />
     </RelativeLayout>
 </RelativeLayout>

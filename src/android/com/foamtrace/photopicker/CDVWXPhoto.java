@@ -43,9 +43,9 @@ public class CDVWXPhoto extends CordovaPlugin {
                 PhotoPickerIntent intent = new PhotoPickerIntent(_this.cordova.getActivity());
                 intent.setSelectModel(com.foamtrace.photopicker.SelectModel.MULTI);
                 intent.setShowCarema(true); // 是否显示拍照
-                intent.setMaxTotal(9); // 最多选择照片数量，默认为9
-        //intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
-        //startActivityForResult(intent, REQUEST_CAMERA_CODE);
+                intent.setMaxTotal(1); // 最多选择照片数量，默认为9
+                //intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
+                //startActivityForResult(intent, REQUEST_CAMERA_CODE);
                 _this.cordova.startActivityForResult((CordovaPlugin) _this, intent, 1);
              }
         });
@@ -67,13 +67,18 @@ public class CDVWXPhoto extends CordovaPlugin {
      * @param intent      An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
      */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+        if (intent == null)
+            return;
+
         ArrayList<String> res = intent.getStringArrayListExtra(com.foamtrace.photopicker.PhotoPickerActivity.EXTRA_RESULT);
+        Boolean isOrigin = intent.getBooleanExtra(com.foamtrace.photopicker.PhotoPickerActivity.EXTRA_ORIGIN, false);
 
         try {
             JSONObject result = new JSONObject();
             String url = res == null ? "null" : res.get(0);
             result.put("url", url);
-            result.put("isOrigin", true);
+            result.put("isOrigin", isOrigin);
             this.callbackContext.success(result);
         } catch (JSONException e) {
 

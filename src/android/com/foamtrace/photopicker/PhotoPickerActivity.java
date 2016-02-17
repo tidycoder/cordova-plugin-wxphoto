@@ -21,14 +21,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.GridView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.foamtrace.photopicker.intent.PhotoPreviewIntent;
-import com.xinfu.uuke.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,10 +60,14 @@ public class PhotoPickerActivity extends AppCompatActivity{
     /** 选择结果，返回为 ArrayList&lt;String&gt; 图片路径集合  */
     public static final String EXTRA_RESULT = "select_result";
 
+    public static final String EXTRA_ORIGIN = "is_origin";
+
     // 结果数据
     private ArrayList<String> resultList = new ArrayList<>();
     // 文件夹数据
     private ArrayList<Folder> mResultFolder = new ArrayList<>();
+
+    private Boolean isOrigin = false;
 
     // 不同loader定义
     private static final int LOADER_ALL = 0;
@@ -71,6 +78,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
     private View mPopupAnchorView;
     private Button btnAlbum;
     private Button btnPreview;
+    private CheckBox btnOrigin;
 
     // 最大照片数量
     private ImageCaptureManager captureManager;
@@ -177,6 +185,24 @@ public class PhotoPickerActivity extends AppCompatActivity{
             }
         });
 
+        btnOrigin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+                isOrigin = btnOrigin.isChecked();
+                // TODO Auto-generated method stub
+//                Toast.makeText(MyActivity.this,
+//                        arg1 ? "选中了" : "取消了选中", Toast.LENGTH_LONG).show();
+            }
+        });
+
+//        btnOrigin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+
     }
 
     private void initViews(){
@@ -194,6 +220,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
         mPopupAnchorView = findViewById(R.id.photo_picker_footer);
         btnAlbum = (Button) findViewById(R.id.btnAlbum);
         btnPreview = (Button) findViewById(R.id.btnPreview);
+        btnOrigin = (CheckBox) findViewById(R.id.btnOrigin);
     }
 
     private void createPopupFolderList(){
@@ -208,10 +235,10 @@ public class PhotoPickerActivity extends AppCompatActivity{
         int folderItemViewHeight =
                 // 图片高度
                 getResources().getDimensionPixelOffset(R.dimen.folder_cover_size) +
-                // Padding Top
-                getResources().getDimensionPixelOffset(R.dimen.folder_padding) +
-                // Padding Bottom
-                getResources().getDimensionPixelOffset(R.dimen.folder_padding);
+                        // Padding Top
+                        getResources().getDimensionPixelOffset(R.dimen.folder_padding) +
+                        // Padding Bottom
+                        getResources().getDimensionPixelOffset(R.dimen.folder_padding);
         int folderViewHeight = mFolderAdapter.getCount() * folderItemViewHeight;
 
         int screenHeigh = getResources().getDisplayMetrics().heightPixels;
@@ -341,7 +368,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
     private void showCameraAction() {
         try {
             Intent intent = captureManager.dispatchTakePictureIntent();
-            startActivityForResult(intent, com.foamtrace.photopicker.ImageCaptureManager.REQUEST_TAKE_PHOTO);
+            startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO);
         } catch (IOException e) {
             Toast.makeText(mCxt, R.string.msg_no_camera, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -376,6 +403,20 @@ public class PhotoPickerActivity extends AppCompatActivity{
         }
     }
 
+    private String FormetFileSize(long fileS) {//转换文件大小
+        DecimalFormat df = new DecimalFormat("#.00");
+        String fileSizeString = "";
+        if (fileS < 1024) {
+            fileSizeString = df.format((double) fileS) + "B";
+        } else if (fileS < 1048576) {
+            fileSizeString = df.format((double) fileS / 1024) + "K";
+        } else if (fileS < 1073741824) {
+            fileSizeString = df.format((double) fileS / 1048576) + "M";
+        } else {
+            fileSizeString = df.format((double) fileS / 1073741824) +"G";
+        }
+        return fileSizeString;
+    }
     /**
      * 刷新操作按钮状态
      */
@@ -385,10 +426,16 @@ public class PhotoPickerActivity extends AppCompatActivity{
         boolean hasSelected = resultList.size() > 0;
         menuDoneItem.setVisible(hasSelected);
         btnPreview.setEnabled(hasSelected);
+        btnOrigin.setEnabled(hasSelected);
         if(hasSelected){
             btnPreview.setText(getResources().getString(R.string.preview) + "(" + resultList.size() + ")");
+            String fileUrl = resultList.get(0);
+            File dF = new File(fileUrl);
+            long fileSize = dF.length();
+            btnOrigin.setText("原图("+ FormetFileSize(fileSize) + ")");
         } else {
             btnPreview.setText(getResources().getString(R.string.preview));
+            btnOrigin.setText("原图");
         }
     }
 
@@ -558,6 +605,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
     private void complete(){
         Intent data = new Intent();
         data.putStringArrayListExtra(EXTRA_RESULT, resultList);
+        data.putExtra(EXTRA_ORIGIN, isOrigin);
         setResult(RESULT_OK, data);
         finish();
     }
