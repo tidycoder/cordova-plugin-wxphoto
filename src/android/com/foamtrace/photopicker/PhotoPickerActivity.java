@@ -28,6 +28,7 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.foamtrace.photopicker.intent.PhotoPreviewIntent;
+import com.xinfu.uuke.R;
 
 import java.io.File;
 import java.io.IOException;
