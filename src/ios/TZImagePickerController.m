@@ -88,6 +88,8 @@
 - (void)observeAuthrizationStatusChange {
     if ([[TZImageManager manager] authorizationStatusAuthorized]) {
         [self pushToPhotoPickerVc];
+        TZAlbumPickerController* p = (TZAlbumPickerController*)self.topViewController;
+        [p configTableView];
         [_tipLable removeFromSuperview];
         [_timer invalidate];
         _timer = nil;

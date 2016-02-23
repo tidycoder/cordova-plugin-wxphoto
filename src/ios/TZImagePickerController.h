@@ -74,4 +74,6 @@
 
 @interface TZAlbumPickerController : UIViewController
 
+- (void)configTableView;
+
 @end
