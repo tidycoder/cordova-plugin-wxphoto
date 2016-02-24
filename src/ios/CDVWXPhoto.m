@@ -35,24 +35,44 @@
     return 0;
 }
 
+- (void)showAlertWithTitle:(NSString *)title {
+//    if (iOS8Later) {
+//        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
+//        [alertController addAction:[UIAlertAction actionWithTitle:@"我知道了" style:UIAlertActionStyleDefault handler:nil]];
+//        [self.viewController presentViewController:alertController animated:YES completion:nil];
+//    } else {
+        [[[UIAlertView alloc] initWithTitle:title message:nil delegate:nil cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil] show];
+//    }
+}
 /// 用户选择好了图片，如果assets非空，则用户选择了原图。
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray *)photos sourceAssets:(NSArray *)assets infos:(NSArray<NSDictionary *> *)infos isOrigin:(BOOL)isOrigin{
 //    NSURL* url = [[infos firstObject] objectForKey:@"PHImageFileURLKey"];
 //    NSLog(@"file origin size: %lld", [self fileSizeAtPath:url]);
-    // NSDictionary* dic = [infos firstObject];
+    NSDictionary* dic = [infos firstObject];
+    bool inCloud = [dic objectForKey:@"PHImageResultIsInCloudKey"];
     // NSURL* nsurl = [dic objectForKey:@"PHImageFileURLKey"];
     // NSString* url = nsurl.absoluteString;
     // NSLog(@"image file url: %@", url);
+
     
 	__weak CDVWXPhoto* weakSelf = self;
     NSData* data = [photos firstObject];
     PHAsset* asset = [assets firstObject];
+    
+    if (iOS9Later && inCloud ) {
+        if ([data isKindOfClass:[NSNumber class]]) {
+            [self showAlertWithTitle:@"照片仅保存在icloud,请打开系统相册查看下载图片后重试"];
+            [[picker presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+            return;
+        }
+    }
 //    NSData* data = UIImageJPEGRepresentation(image, 0.5);
     if (data) {
         NSString* extension = @"jpg";
         NSString* filePath = [self tempFilePath:extension];
         NSError* err = nil;
         CDVPluginResult* result = nil;
+
         
         // save file
         if (![data writeToFile:filePath options:NSAtomicWrite error:&err]) {

@@ -192,7 +192,12 @@
     NSMutableArray *photos = [NSMutableArray array];
     NSMutableArray *assets = [NSMutableArray array];
     NSMutableArray *infoArr = [NSMutableArray array];
-    for (NSInteger i = 0; i < _selectedPhotoArr.count; i++) { [photos addObject:@1];[assets addObject:@1];[infoArr addObject:@1]; }
+    
+    for (NSInteger i = 0; i < _selectedPhotoArr.count; i++) {
+        [photos addObject:@1];
+        [assets addObject:@1];
+        [infoArr addObject:@1];
+    }
     
     for (NSInteger i = 0; i < _selectedPhotoArr.count; i++) {
         TZAssetModel *model = _selectedPhotoArr[i];
@@ -202,7 +207,7 @@
             if (info) [infoArr replaceObjectAtIndex:i withObject:info];
             [assets replaceObjectAtIndex:i withObject:model.asset];
 
-            for (id item in photos) { if ([item isKindOfClass:[NSNumber class]]) return; }
+            //for (id item in photos) { if ([item isKindOfClass:[NSNumber class]]) return; }
             
             if ([imagePickerVc.pickerDelegate respondsToSelector:@selector(imagePickerController:didFinishPickingPhotos:sourceAssets:)]) {
                 [imagePickerVc.pickerDelegate imagePickerController:imagePickerVc didFinishPickingPhotos:photos sourceAssets:assets];
