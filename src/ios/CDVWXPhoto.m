@@ -68,7 +68,8 @@
     }
 //    NSData* data = UIImageJPEGRepresentation(image, 0.5);
     if (data) {
-        NSString* extension = @"jpg";
+        NSString *fileName = [asset valueForKey:@"filename"];
+        NSString * extension = [fileName pathExtension];
         NSString* filePath = [self tempFilePath:extension];
         NSError* err = nil;
         CDVPluginResult* result = nil;
