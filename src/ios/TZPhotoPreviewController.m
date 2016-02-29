@@ -19,7 +19,7 @@
     
     UIView *_naviBar;
     UIButton *_backButton;
-    UIButton *_selectButton;
+    //UIButton *_selectButton;
     
     UIView *_toolBar;
     UIButton *_okButton;
@@ -69,12 +69,12 @@
     [_backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     
-    _selectButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.width - 54, 10, 42, 42)];
-    [_selectButton setImage:[UIImage imageNamed:@"photo_def_photoPickerVc"] forState:UIControlStateNormal];
-    [_selectButton setImage:[UIImage imageNamed:@"photo_sel_photoPickerVc"] forState:UIControlStateSelected];
-    [_selectButton addTarget:self action:@selector(select:) forControlEvents:UIControlEventTouchUpInside];
+    //_selectButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.width - 54, 10, 42, 42)];
+    //[_selectButton setImage:[UIImage imageNamed:@"photo_def_photoPickerVc"] forState:UIControlStateNormal];
+    //[_selectButton setImage:[UIImage imageNamed:@"photo_sel_photoPickerVc"] forState:UIControlStateSelected];
+    //[_selectButton addTarget:self action:@selector(select:) forControlEvents:UIControlEventTouchUpInside];
     
-    [_naviBar addSubview:_selectButton];
+    //[_naviBar addSubview:_selectButton];
     [_naviBar addSubview:_backButton];
     [self.view addSubview:_naviBar];
 }
@@ -210,7 +210,7 @@
     _originalPhotoLable.hidden = !_originalPhotoButton.isSelected;
     if (_isSelectOriginalPhoto) {
         [self showPhotoBytes];
-        if (!_selectButton.isSelected) [self select:_selectButton];
+        //if (!_selectButton.isSelected) [self select:_selectButton];
     }
 }
 
@@ -253,7 +253,7 @@
 
 - (void)refreshNaviBarAndBottomBarState {
     TZAssetModel *model = _photoArr[_currentIndex];
-    _selectButton.selected = model.isSelected;
+    //_selectButton.selected = model.isSelected;
     _numberLable.text = [NSString stringWithFormat:@"%zd",_selectedPhotoArr.count];
     _numberImageView.hidden = (_selectedPhotoArr.count <= 0 || _isHideNaviBar);
     _numberLable.hidden = (_selectedPhotoArr.count <= 0 || _isHideNaviBar);
