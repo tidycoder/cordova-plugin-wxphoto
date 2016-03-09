@@ -283,44 +283,24 @@
 
 - (void)getOriginPhotoWithAsset:(id)asset completion:(void (^)(NSData* data, NSDictionary *, BOOL isDegraded))completion {
     if ([asset isKindOfClass:[PHAsset class]]) {
-        PHAsset *phAsset = (PHAsset *)asset;
-//        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-//        options.synchronous = YES;
-//        options.version = PHImageRequestOptionsVersionOriginal;
-//        options.resizeMode = PHImageRequestOptionsResizeModeNone;
-//        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
-//
-        
-        
-        [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData *__nullable imageData, NSString *__nullable dataUTI, UIImageOrientation orientation, NSDictionary *__nullable info) {
-            BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
-            if (downloadFinined) {
-                if (completion) completion(imageData, info,[[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
-            }
-        }];
-//        [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:CGSizeMake(phAsset.pixelWidth, phAsset.pixelHeight) contentMode:PHImageContentModeAspectFit options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-//            BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
-//            if (downloadFinined) {
-//                if (completion) completion(result,info,[[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
-//            }
-//        }];
+      PHAsset *phAsset = (PHAsset *)asset;
+      [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData *__nullable imageData, NSString *__nullable dataUTI, UIImageOrientation orientation, NSDictionary *__nullable info) {
+        BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
+        if (downloadFinined) {
+          if (completion) completion(imageData, info,[[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
+        }
+      }];
     } else if ([asset isKindOfClass:[ALAsset class]]) {
-        ALAsset *alAsset = (ALAsset *)asset;
-        ALAssetRepresentation *assetRep = [alAsset defaultRepresentation];
-        CGImageRef thumbnailImageRef = alAsset.aspectRatioThumbnail;
-        UIImage *thumbnailImage = [UIImage imageWithCGImage:thumbnailImageRef scale:1.0 orientation:UIImageOrientationUp];
-        if (completion) completion(thumbnailImage,nil,YES);
-        
-//        if (photoWidth == [UIScreen mainScreen].bounds.size.width) {
-            dispatch_async(dispatch_get_global_queue(0,0), ^{
-                CGImageRef fullScrennImageRef = [assetRep fullScreenImage];
-                UIImage *fullScrennImage = [UIImage imageWithCGImage:fullScrennImageRef scale:1.0 orientation:UIImageOrientationUp];
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (completion) completion(fullScrennImage,nil,NO);
-                });
-            });
-//        }
+      ALAsset *alAsset = (ALAsset *)asset;
+      ALAssetRepresentation *assetRep = [alAsset defaultRepresentation];
+      dispatch_async(dispatch_get_global_queue(0,0), ^{
+        CGImageRef fullScrennImageRef = [assetRep fullScreenImage];
+        UIImage *fullScreenImage = [UIImage imageWithCGImage:fullScrennImageRef scale:1.0 orientation:UIImageOrientationUp];
+        NSData* fullScreenData = UIImageJPEGRepresentation(fullScreenImage, 1.0);
+        dispatch_async(dispatch_get_main_queue(), ^{
+          if (completion) completion(fullScreenData,nil,NO);
+        });
+      });
     }
 }
 
