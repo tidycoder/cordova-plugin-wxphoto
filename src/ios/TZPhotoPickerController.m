@@ -237,9 +237,9 @@
     TZAssetModel *model = _photoArr[indexPath.row];
     cell.model = model;
     
-    __weak typeof(cell) weakCell = cell;
-    __weak typeof(self) weakSelf = self;
-    __weak typeof(_numberImageView.layer) weakLayer = _numberImageView.layer;
+    __weak TZAssetCell* weakCell = cell;
+    __weak TZPhotoPickerController* weakSelf = self;
+    __weak CALayer* weakLayer = _numberImageView.layer;
     cell.didSelectPhotoBlock = ^(BOOL isSelected) {
         // 1. cancel select / 取消选择
         if (isSelected) {
