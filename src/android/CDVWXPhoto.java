@@ -1,9 +1,9 @@
-package com.foamtrace.photopicker;
+package uuke.xinfu.wxphoto;
 
 
 import android.content.Intent;
 
-import com.foamtrace.photopicker.intent.PhotoPickerIntent;
+import uuke.xinfu.wxphoto.intent.PhotoPickerIntent;
 import com.xinfu.uuke.MainActivity;
 
 import org.apache.cordova.CallbackContext;

@@ -74,7 +74,7 @@
         <platform name="android">
             <config-file target="res/xml/config.xml" parent="/*">
                 <feature name="WXPhoto">
-                    <param name="android-package" value="com.foamtrace.photopicker.CDVWXPhoto" />
+                    <param name="android-package" value="CDVWXPhoto" />
                     <param name="onload" value="true" />
                 </feature>
             </config-file>
@@ -85,66 +85,18 @@
 
             <config-file target="AndroidManifest.xml" parent="/manifest/application">
                 <activity
-                    android:name="com.foamtrace.photopicker.PhotoPickerActivity"
+                    android:name="uuke.xinfu.wxphoto.PhotoPickerActivity"
                     android:theme="@style/PhotoPickerTheme"
                     android:configChanges="orientation|screenSize"/>
-                <activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity"
+                <activity android:name="uuke.xinfu.wxphoto.PhotoPreviewActivity"
                     android:theme="@style/PhotoPickerTheme"/>
             </config-file>
 
-            <source-file src="src/android/com/foamtrace/photopicker/intent/PhotoPickerIntent.java" target-dir="src/com/foamtrace/photopicker/intent" />
-            <source-file src="src/android/com/foamtrace/photopicker/intent/PhotoPreviewIntent.java" target-dir="src/com/foamtrace/photopicker/intent" />
-            <source-file src="src/android/com/foamtrace/photopicker/widget/ViewPagerFixed.java" target-dir="src/com/foamtrace/photopicker/widget" />
-
-            <source-file src="src/android/com/foamtrace/photopicker/Folder.java" target-dir="src/com/foamtrace/photopicker" />
-            <source-file src="src/android/com/foamtrace/photopicker/FolderAdapter.java" target-dir="src/com/foamtrace/photopicker" />
-            <source-file src="src/android/com/foamtrace/photopicker/Image.java" target-dir="src/com/foamtrace/photopicker" />
-            <source-file src="src/android/com/foamtrace/photopicker/ImageCaptureManager.java" target-dir="src/com/foamtrace/photopicker" />
-            <source-file src="src/android/com/foamtrace/photopicker/ImageConfig.java" target-dir="src/com/foamtrace/photopicker" />
-            <source-file src="src/android/com/foamtrace/photopicker/ImageGridAdapter.java" target-dir="src/com/foamtrace/photopicker" />
-            <source-file src="src/android/com/foamtrace/photopicker/PhotoPagerAdapter.java" target-dir="src/com/foamtrace/photopicker" />
-            <source-file src="src/android/com/foamtrace/photopicker/PhotoPickerActivity.java" target-dir="src/com/foamtrace/photopicker" />
-            <source-file src="src/android/com/foamtrace/photopicker/PhotoPreviewActivity.java" target-dir="src/com/foamtrace/photopicker" />
-            <source-file src="src/android/com/foamtrace/photopicker/SelectModel.java" target-dir="src/com/foamtrace/photopicker" />
-            <source-file src="src/android/com/foamtrace/photopicker/CDVWXPhoto.java" target-dir="src/com/foamtrace/photopicker" />
-
-
-            <resource-file src="src/android/res/mipmap-hdpi/ic_action_discard.png" target="res/mipmap-hdpi/ic_action_discard.png" />
-            <resource-file src="src/android/res/mipmap-mdpi/ic_action_discard.png" target="res/mipmap-mdpi/ic_action_discard.png" />
-            <resource-file src="src/android/res/mipmap-xhdpi/ic_action_discard.png" target="res/mipmap-xhdpi/ic_action_discard.png" />
-            <resource-file src="src/android/res/mipmap-xhdpi/text_indicator_normal.png" target="res/mipmap-xhdpi/text_indicator_normal.png" />
-            <resource-file src="src/android/res/mipmap-xhdpi/text_indicator_pressed.png" target="res/mipmap-xhdpi/text_indicator_pressed.png" />
-
-            <resource-file src="src/android/res/mipmap-xxhdpi/asv.png" target="res/mipmap-xxhdpi/asv.png" />
-            <resource-file src="src/android/res/mipmap-xxhdpi/asy.png" target="res/mipmap-xxhdpi/asy.png" />
-            <resource-file src="src/android/res/mipmap-xxhdpi/btn_selected.png" target="res/mipmap-xxhdpi/btn_selected.png" />
-            <resource-file src="src/android/res/mipmap-xxhdpi/btn_unselected.png" target="res/mipmap-xxhdpi/btn_unselected.png" />
-            <resource-file src="src/android/res/mipmap-xxhdpi/default_check.png" target="res/mipmap-xxhdpi/default_check.png" />
-            <resource-file src="src/android/res/mipmap-xxhdpi/default_error.png" target="res/mipmap-xxhdpi/default_error.png" />
-            <resource-file src="src/android/res/mipmap-xxhdpi/ic_action_discard.png" target="res/mipmap-xxhdpi/ic_action_discard.png" />
-
-
-            <resource-file src="src/android/res/drawable/text_indicator.xml" target="res/drawable/text_indicator.xml" />
-            <resource-file src="src/android/res/menu/menu_picker.xml" target="res/menu/menu_picker.xml" />
-            <resource-file src="src/android/res/menu/menu_preview.xml" target="res/menu/menu_preview.xml" />
-            <resource-file src="src/android/res/color/action_text_color.xml" target="res/color/action_text_color.xml" />
-
-            <resource-file src="src/android/res/values/colors.xml" target="res/values/colors.xml" />
-            <resource-file src="src/android/res/values/dimens.xml" target="res/values/dimens.xml" />
-
-
-            <resource-file src="src/android/res/layout/activity_image_preview.xml" target="res/layout/activity_image_preview.xml" />
-            <resource-file src="src/android/res/layout/activity_photopicker.xml" target="res/layout/activity_photopicker.xml" />
-            <resource-file src="src/android/res/layout/item_camera.xml" target="res/layout/item_camera.xml" />
-            <resource-file src="src/android/res/layout/item_folder.xml" target="res/layout/item_folder.xml" />
-            <resource-file src="src/android/res/layout/item_preview.xml" target="res/layout/item_preview.xml" />
-            <resource-file src="src/android/res/layout/item_select_image.xml" target="res/layout/item_select_image.xml" />
-            <resource-file src="src/android/res/layout/photopicker_toolbar.xml" target="res/layout/photopicker_toolbar.xml" />
-            <resource-file src="src/android/res/values/strings.xml" target="res/values/wxstrings.xml" />
-            <resource-file src="src/android/res/values/styles.xml" target="res/values/wxstyles.xml" />
-            <framework src="com.android.support:appcompat-v7:22+" />
-            <framework src="com.android.support:design:22.+" />
             <framework src="com.github.bumptech.glide:glide:3.6.1" />
-            <framework src="com.github.chrisbanes.photoview:library:+" />
+
+            <source-file src="src/android/CDVWXPhoto.java" target-dir="src/uuke/xinfu/wxphoto" />
+            <source-file src="src/android/libs/wxphoto.aar" target-dir="libs" />
+
+
         </platform>
     </plugin>
