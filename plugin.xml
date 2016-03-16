@@ -74,7 +74,7 @@
         <platform name="android">
             <config-file target="res/xml/config.xml" parent="/*">
                 <feature name="WXPhoto">
-                    <param name="android-package" value="CDVWXPhoto" />
+                    <param name="android-package" value="uuke.xinfu.wxphoto.CDVWXPhoto" />
                     <param name="onload" value="true" />
                 </feature>
             </config-file>

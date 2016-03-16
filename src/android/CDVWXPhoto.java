@@ -4,7 +4,6 @@ package uuke.xinfu.wxphoto;
 import android.content.Intent;
 
 import uuke.xinfu.wxphoto.intent.PhotoPickerIntent;
-import com.xinfu.uuke.MainActivity;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaArgs;
@@ -41,7 +40,7 @@ public class CDVWXPhoto extends CordovaPlugin {
              @Override
              public void run() {
                 PhotoPickerIntent intent = new PhotoPickerIntent(_this.cordova.getActivity());
-                intent.setSelectModel(com.foamtrace.photopicker.SelectModel.MULTI);
+                intent.setSelectModel(SelectModel.MULTI);
                 intent.setShowCarema(true); // 是否显示拍照
                 intent.setMaxTotal(1); // 最多选择照片数量，默认为9
                 //intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
@@ -71,8 +70,8 @@ public class CDVWXPhoto extends CordovaPlugin {
         if (intent == null)
             return;
 
-        ArrayList<String> res = intent.getStringArrayListExtra(com.foamtrace.photopicker.PhotoPickerActivity.EXTRA_RESULT);
-        Boolean isOrigin = intent.getBooleanExtra(com.foamtrace.photopicker.PhotoPickerActivity.EXTRA_ORIGIN, false);
+        ArrayList<String> res = intent.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT);
+        Boolean isOrigin = intent.getBooleanExtra(PhotoPickerActivity.EXTRA_ORIGIN, false);
 
         try {
             JSONObject result = new JSONObject();
