@@ -1,0 +1,20 @@
+// Allow plugins to declare Maven dependencies via build-extras.gradle.
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+dependencies {
+    compile ("com.android.support:appcompat-v7:22+") {
+        exclude module: 'support-v4'
+    }
+    compile ("com.github.bumptech.glide:glide:3.6.1") {
+        exclude module: 'support-v4'
+    }
+    compile(name:'wxphoto', ext:'aar')
+    compile('com.github.chrisbanes.photoview:library:+') {
+        exclude module: 'support-v4'
+    }
+    // SUB-PROJECT DEPENDENCIES END
+}
