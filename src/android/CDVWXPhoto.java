@@ -36,18 +36,23 @@ public class CDVWXPhoto extends CordovaPlugin {
 
         final CDVWXPhoto _this = this;
 
-        cordova.getThreadPool().execute(new Runnable() {
-             @Override
-             public void run() {
-                PhotoPickerIntent intent = new PhotoPickerIntent(_this.cordova.getActivity());
-                intent.setSelectModel(SelectModel.MULTI);
-                intent.setShowCarema(true); // 是否显示拍照
-                intent.setMaxTotal(1); // 最多选择照片数量，默认为9
-                //intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
-                //startActivityForResult(intent, REQUEST_CAMERA_CODE);
-                _this.cordova.startActivityForResult((CordovaPlugin) _this, intent, 1);
-             }
-        });
+        if(!PermissionHelper.hasPermission(this, permissions[0])) {
+            PermissionHelper.requestPermission(this, 0, Manifest.permission.READ_EXTERNAL_STORAGE);
+        } else {
+            this.getPicture();
+        }
+        // cordova.getThreadPool().execute(new Runnable() {
+        //      @Override
+        //      public void run() {
+        //         PhotoPickerIntent intent = new PhotoPickerIntent(_this.cordova.getActivity());
+        //         intent.setSelectModel(SelectModel.MULTI);
+        //         intent.setShowCarema(true); // 是否显示拍照
+        //         intent.setMaxTotal(1); // 最多选择照片数量，默认为9
+        //         //intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
+        //         //startActivityForResult(intent, REQUEST_CAMERA_CODE);
+        //         _this.cordova.startActivityForResult((CordovaPlugin) _this, intent, 1);
+        //      }
+        // });
 
         PluginResult r = new PluginResult(PluginResult.Status.NO_RESULT);
         r.setKeepCallback(true);
@@ -55,6 +60,31 @@ public class CDVWXPhoto extends CordovaPlugin {
 
 
         return true;
+    }
+
+    public void getPicture() {
+        final CDVWXPhoto _this = this;
+        PhotoPickerIntent intent = new PhotoPickerIntent(_this.cordova.getActivity());
+        intent.setSelectModel(SelectModel.MULTI);
+        intent.setShowCarema(true); // 是否显示拍照
+        intent.setMaxTotal(1); // 最多选择照片数量，默认为9
+        //intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
+        //startActivityForResult(intent, REQUEST_CAMERA_CODE);
+        _this.cordova.startActivityForResult((CordovaPlugin) _this, intent, 1);
+    }
+
+    public void onRequestPermissionResult(int requestCode, String[] permissions,
+                                          int[] grantResults) throws JSONException
+    {
+        for(int r:grantResults)
+        {
+            if(r == PackageManager.PERMISSION_DENIED)
+            {
+                this.callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, PERMISSION_DENIED_ERROR));
+                return;
+            }
+        }
+        getPicture();
     }
 
     /**
