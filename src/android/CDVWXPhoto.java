@@ -18,10 +18,34 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+
+import android.Manifest;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.MediaScannerConnection;
+import android.media.MediaScannerConnection.MediaScannerConnectionClient;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
+import android.content.pm.PackageManager;
+
 public class CDVWXPhoto extends CordovaPlugin {
 
     public CallbackContext callbackContext;
 
+    public static final int PERMISSION_DENIED_ERROR = 20;
+    protected final static String[] permissions = { Manifest.permission.READ_EXTERNAL_STORAGE };
 
     @Override
     public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
