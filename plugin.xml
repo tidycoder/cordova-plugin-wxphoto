@@ -95,6 +95,7 @@
             <framework src="src/android/rules.gradle" custom="true" type="gradleReference" />
 
             <source-file src="src/android/CDVWXPhoto.java" target-dir="src/uuke/xinfu/wxphoto" />
+            <source-file src="src/android/PermissionHelper.java" target-dir="src/uuke/xinfu/wxphoto" />
             <source-file src="src/android/libs/wxphoto.aar" target-dir="libs" />
 
 
