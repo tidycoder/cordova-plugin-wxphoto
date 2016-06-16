@@ -18,6 +18,8 @@
     NSTimer *_timer;
     UILabel *_tipLable;
     BOOL _pushToPhotoPickerVc;
+    BOOL _pushToVideoPickerVc;
+
     
     UIButton *_progressHUD;
     UIView *_HUDContainer;
@@ -224,6 +226,7 @@
 @interface TZAlbumPickerController ()<UITableViewDataSource,UITableViewDelegate> {
     UITableView *_tableView;
     NSMutableArray *_albumArr;
+    BOOL _onlyVideo;
 }
 
 @end
