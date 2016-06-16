@@ -13,5 +13,5 @@
 @property (nonatomic, strong) NSString *currentCallbackId;
 
 - (void)pick:(CDVInvokedUrlCommand *)command;
-
+- (void)pickVideo:(CDVInvokedUrlCommand*)command;
 @end

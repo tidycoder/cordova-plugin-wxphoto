@@ -127,6 +127,62 @@
     }
 }
 
+-(void)getVideoAlbums:(void (^)(NSArray<TZAlbumModel *> *models))completion {
+    NSMutableArray *albumArr = [NSMutableArray array];
+    if (iOS8Later) {
+        PHFetchOptions *option = [[PHFetchOptions alloc] init];
+        option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeVideo];
+        option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
+        
+        PHAssetCollectionSubtype smartAlbumSubtype = PHAssetCollectionSubtypeSmartAlbumUserLibrary | PHAssetCollectionSubtypeSmartAlbumRecentlyAdded | PHAssetCollectionSubtypeSmartAlbumVideos;
+        // For iOS 9, We need to show ScreenShots Album && SelfPortraits Album
+        if (iOS9Later) {
+            smartAlbumSubtype = PHAssetCollectionSubtypeSmartAlbumUserLibrary | PHAssetCollectionSubtypeSmartAlbumRecentlyAdded | PHAssetCollectionSubtypeSmartAlbumScreenshots | PHAssetCollectionSubtypeSmartAlbumSelfPortraits | PHAssetCollectionSubtypeSmartAlbumVideos;
+        }
+        PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:smartAlbumSubtype options:nil];
+        for (PHAssetCollection *collection in smartAlbums) {
+            PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
+            if (fetchResult.count < 1) continue;
+            if ([collection.localizedTitle containsString:@"Deleted"]) continue;
+            if ([collection.localizedTitle isEqualToString:@"Camera Roll"]) {
+                [albumArr insertObject:[self modelWithResult:fetchResult name:collection.localizedTitle] atIndex:0];
+            } else {
+                [albumArr addObject:[self modelWithResult:fetchResult name:collection.localizedTitle]];
+            }
+        }
+        
+        PHFetchResult *albums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumRegular | PHAssetCollectionSubtypeAlbumSyncedAlbum options:nil];
+        for (PHAssetCollection *collection in albums) {
+            PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
+            if (fetchResult.count < 1) continue;
+            if ([collection.localizedTitle isEqualToString:@"My Photo Stream"]) {
+                [albumArr insertObject:[self modelWithResult:fetchResult name:collection.localizedTitle] atIndex:1];
+            } else {
+                [albumArr addObject:[self modelWithResult:fetchResult name:collection.localizedTitle]];
+            }
+        }
+        if (completion && albumArr.count > 0) completion(albumArr);
+    } else {
+        //@todo
+        [self.assetLibrary enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+            if (group == nil) {
+                if (completion && albumArr.count > 0) completion(albumArr);
+            }
+            if ([group numberOfAssets] < 1) return;
+            NSString *name = [group valueForProperty:ALAssetsGroupPropertyName];
+            if ([name isEqualToString:@"Camera Roll"] || [name isEqualToString:@"相机胶卷"]) {
+                [albumArr insertObject:[self modelWithResult:group name:name] atIndex:0];
+            } else if ([name isEqualToString:@"My Photo Stream"] || [name isEqualToString:@"我的照片流"]) {
+                [albumArr insertObject:[self modelWithResult:group name:name] atIndex:1];
+            } else {
+                [albumArr addObject:[self modelWithResult:group name:name]];
+            }
+        } failureBlock:nil];
+    }
+}
+
+
+
 #pragma mark - Get Assets
 
 /// Get Assets 获得照片数组
@@ -351,6 +407,35 @@
 }
 
 #pragma mark - Get Video
+- (void)getVideoAlbum:(void (^)(TZAlbumModel *model))completion {
+    __block TZAlbumModel *model;
+    if (iOS8Later) {
+        PHFetchOptions *option = [[PHFetchOptions alloc] init];
+        option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeVideo];
+        option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
+        
+        PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
+        for (PHAssetCollection *collection in smartAlbums) {
+            if ([collection.localizedTitle isEqualToString:@"Camera Roll"]) {
+                PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
+                model = [self modelWithResult:fetchResult name:collection.localizedTitle];
+                if (completion) completion(model);
+                break;
+            }
+        }
+    } else {
+        //@todo: judge video!!
+        [self.assetLibrary enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+            if ([group numberOfAssets] < 1) return;
+            NSString *name = [group valueForProperty:ALAssetsGroupPropertyName];
+            if ([name isEqualToString:@"Camera Roll"] || [name isEqualToString:@"相机胶卷"]) {
+                model = [self modelWithResult:group name:name];
+                if (completion) completion(model);
+                *stop = YES;
+            }
+        } failureBlock:nil];
+    }
+}
 
 - (void)getVideoWithAsset:(id)asset completion:(void (^)(AVPlayerItem * _Nullable, NSDictionary * _Nullable))completion {
     if ([asset isKindOfClass:[PHAsset class]]) {

@@ -21,11 +21,28 @@
 	}];
 }
 
+- (void)pickVideo:(CDVInvokedUrlCommand*)command
+{
+  self.currentCallbackId = command.callbackId;
+   __weak CDVWXPhoto* weakSelf = self;
+  [self.commandDelegate runInBackground:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+          TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithVideo:self];
+          [weakSelf.viewController presentViewController:imagePickerVc animated:YES completion:nil];
+        });
+  }];
+}
+
 /// 用户点击了取消
 - (void)imagePickerControllerDidCancel:(TZImagePickerController *)picker {
 	CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.currentCallbackId];
 }
+
+- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingVideo:(UIImage *)coverImage sourceAssets:(id)asset {
+
+}
+
 
 -(long long) fileSizeAtPath:(NSString*) filePath{
     NSFileManager* manager = [NSFileManager defaultManager];

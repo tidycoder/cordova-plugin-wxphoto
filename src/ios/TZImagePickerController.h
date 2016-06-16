@@ -21,6 +21,7 @@
 
 /// Use this init method / 用这个初始化方法
 - (instancetype)initWithMaxImagesCount:(NSInteger)maxImagesCount delegate:(id<TZImagePickerControllerDelegate>)delegate;
+- (instancetype)initWithVideo:(id<TZImagePickerControllerDelegate>)delegate;
 
 /// Default is 9 / 默认最大可选9张图片
 @property (nonatomic, assign) NSInteger maxImagesCount;
@@ -75,5 +76,5 @@
 @interface TZAlbumPickerController : UIViewController
 
 - (void)configTableView;
-
+- (void)setOnlyVideo:(BOOL)onlyVideo ;
 @end

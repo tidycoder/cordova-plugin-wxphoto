@@ -21,6 +21,7 @@
 /// Get Album 获得相册/相册数组
 - (void)getCameraRollAlbum:(BOOL)allowPickingVideo completion:(void (^)(TZAlbumModel *model))completion;
 - (void)getAllAlbums:(BOOL)allowPickingVideo completion:(void (^)(NSArray<TZAlbumModel *> *models))completion;
+-(void)getVideoAlbums:(void (^)(NSArray<TZAlbumModel *> *models))completion;
 
 /// Get Assets 获得Asset数组
 - (void)getAssetsFromFetchResult:(id)result allowPickingVideo:(BOOL)allowPickingVideo completion:(void (^)(NSArray<TZAssetModel *> *models))completion;
@@ -33,6 +34,7 @@
 - (void)getOriginPhotoWithAsset:(id)asset completion:(void (^)(NSData *photo,NSDictionary *info,BOOL isDegraded))completion;
 
 /// Get video 获得视频
+- (void)getVideoAlbum:(void (^)(TZAlbumModel *model))completion;
 - (void)getVideoWithAsset:(id)asset completion:(void (^)(AVPlayerItem * playerItem, NSDictionary * info))completion;
 
 /// Get photo bytes 获得一组照片的大小
