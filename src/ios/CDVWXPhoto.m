@@ -13,8 +13,10 @@
 {
   self.currentCallbackId = command.callbackId;
   int maxImageCount = 1;
-  NSString* sMaxImageCount = [command.arguments objectAtIndex:0];
-  if (sMaxImageCount != nil) maxImageCount = [sMaxImageCount intValue];
+  if (command.arguments.count > 0) {
+      NSString* sMaxImageCount = [command.arguments objectAtIndex:0];
+      if (sMaxImageCount != nil) maxImageCount = [sMaxImageCount intValue];
+  }
 
    __weak CDVWXPhoto* weakSelf = self;
   [self.commandDelegate runInBackground:^{
