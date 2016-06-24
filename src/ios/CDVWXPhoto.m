@@ -11,14 +11,18 @@
 
 - (void)pick:(CDVInvokedUrlCommand *)command
 {
-	self.currentCallbackId = command.callbackId;
-	 __weak CDVWXPhoto* weakSelf = self;
-	[self.commandDelegate runInBackground:^{
+  self.currentCallbackId = command.callbackId;
+  int maxImageCount = 1;
+  NSString* sMaxImageCount = [command.arguments objectAtIndex:0];
+  if (sMaxImageCount != nil) maxImageCount = [sMaxImageCount intValue];
+
+   __weak CDVWXPhoto* weakSelf = self;
+  [self.commandDelegate runInBackground:^{
         dispatch_async(dispatch_get_main_queue(), ^{
-    	    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:1 delegate:self];
-    	    [weakSelf.viewController presentViewController:imagePickerVc animated:YES completion:nil];
+          TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:maxImageCount delegate:self];
+          [weakSelf.viewController presentViewController:imagePickerVc animated:YES completion:nil];
         });
-	}];
+  }];
 }
 
 - (void)pickVideo:(CDVInvokedUrlCommand*)command
@@ -35,12 +39,16 @@
 
 /// 用户点击了取消
 - (void)imagePickerControllerDidCancel:(TZImagePickerController *)picker {
-	CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+  CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.currentCallbackId];
 }
 
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingVideo:(UIImage *)coverImage sourceAssets:(id)asset {
+    __weak CDVWXPhoto* weakSelf = self;
+    CDVPluginResult* result = nil;
 
+    [weakSelf.commandDelegate sendPluginResult:result callbackId:weakSelf.currentCallbackId];
+    [[picker presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -63,64 +71,74 @@
 }
 /// 用户选择好了图片，如果assets非空，则用户选择了原图。
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray *)photos sourceAssets:(NSArray *)assets infos:(NSArray<NSDictionary *> *)infos isOrigin:(BOOL)isOrigin {
-  __weak CDVWXPhoto* weakSelf = self;
+    __weak CDVWXPhoto* weakSelf = self;
   CDVPluginResult* result = nil;
-  if (iOS8Later) {
-    NSData* data = [photos firstObject];
-    PHAsset* asset = [assets firstObject];
+  NSMutableArray *dicts = [NSMutableArray array];
+  for (int i = 0; i < photos.count; ++i) {
+      if (iOS8Later) {
+          NSData* data = [photos objectAtIndex:i];
+          PHAsset* asset = [assets objectAtIndex:i];
+          
+          if (iOS9Later) {
+              NSDictionary* dic = [infos firstObject];
+              bool inCloud = [dic objectForKey:@"PHImageResultIsInCloudKey"];
+              if (inCloud) {
+                  if ([data isKindOfClass:[NSNumber class]]) {
+                      [self showAlertWithTitle:@"照片仅保存在icloud,请打开系统相册查看下载图片后重试"];
+                      [[picker presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+                      return;
+                  }
+              }
+          }
+          //    NSData* data = UIImageJPEGRepresentation(image, 0.5);
+          if (data) {
+              NSString *fileName = [asset valueForKey:@"filename"];
+              NSString * extension = [fileName pathExtension];
+              NSString* filePath = [self tempFilePath:extension];
+              NSError* err = nil;
+              
+              // save file
+              if (![data writeToFile:filePath options:NSAtomicWrite error:&err]) {
+                  //            NSLog(@"file size: %lld", [self fileSizeAtPath:filePath]);
+                  result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsString:[err localizedDescription]];
+                  break;
+              } else {
+                  NSLog(@"file size: %lld", [self fileSizeAtPath:filePath]);
+                  NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                        filePath, @"url", [NSNumber numberWithBool:isOrigin], @"isOrigin", [NSNumber numberWithLong:asset.pixelWidth], @"width", [NSNumber numberWithLong:asset.pixelHeight], @"height", nil];
+                  [dicts addObject:dict];
+
+              }
+          }
+      }
+      else {
+          NSData* data = [photos firstObject];
+          ALAsset* asset = [assets firstObject];
+          if (data) {
+              NSString* extension = @"jpg";
+              NSString* filePath = [self tempFilePath:extension];
+              NSError* err = nil;
+              
+              if (![data writeToFile:filePath options:NSAtomicWrite error:&err]) {
+                  //            NSLog(@"file size: %lld", [self fileSizeAtPath:filePath]);
+                  result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsString:[err localizedDescription]];
+                  break;
+              } else {
+                  NSLog(@"file size: %lld", [self fileSizeAtPath:filePath]);
+                  NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                        filePath, @"url", [NSNumber numberWithBool:YES], @"isOrigin", [NSNumber numberWithLong:asset.defaultRepresentation.dimensions.width], @"width", [NSNumber numberWithLong:asset.defaultRepresentation.dimensions.height], @"height", nil];
+                  [dicts addObject:dict];
+                  result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+              }
+          }
+      }
+
+    }
     
-    if (iOS9Later) {
-      NSDictionary* dic = [infos firstObject];
-      bool inCloud = [dic objectForKey:@"PHImageResultIsInCloudKey"];
-      if (inCloud) {
-        if ([data isKindOfClass:[NSNumber class]]) {
-          [self showAlertWithTitle:@"照片仅保存在icloud,请打开系统相册查看下载图片后重试"];
-          [[picker presentingViewController] dismissViewControllerAnimated:YES completion:nil];
-          return;
-        }
-      }
+    if (result == nil) {
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:dicts];
     }
-    //    NSData* data = UIImageJPEGRepresentation(image, 0.5);
-    if (data) {
-      NSString *fileName = [asset valueForKey:@"filename"];
-      NSString * extension = [fileName pathExtension];
-      NSString* filePath = [self tempFilePath:extension];
-      NSError* err = nil;
-      
-      // save file
-      if (![data writeToFile:filePath options:NSAtomicWrite error:&err]) {
-        //            NSLog(@"file size: %lld", [self fileSizeAtPath:filePath]);
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsString:[err localizedDescription]];
-      } else {
-        NSLog(@"file size: %lld", [self fileSizeAtPath:filePath]);
-        NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
-                              filePath, @"url", [NSNumber numberWithBool:isOrigin], @"isOrigin", [NSNumber numberWithLong:asset.pixelWidth], @"width", [NSNumber numberWithLong:asset.pixelHeight], @"height", nil];
-        
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
-      }
-    }
-  }
-  else {
-    NSData* data = [photos firstObject];
-    ALAsset* asset = [assets firstObject];
-    if (data) {
-      NSString* extension = @"jpg";
-      NSString* filePath = [self tempFilePath:extension];
-      NSError* err = nil;
-      
-      if (![data writeToFile:filePath options:NSAtomicWrite error:&err]) {
-        //            NSLog(@"file size: %lld", [self fileSizeAtPath:filePath]);
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsString:[err localizedDescription]];
-      } else {
-        NSLog(@"file size: %lld", [self fileSizeAtPath:filePath]);
-        NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
-                              filePath, @"url", [NSNumber numberWithBool:YES], @"isOrigin", [NSNumber numberWithLong:asset.defaultRepresentation.dimensions.width], @"width", [NSNumber numberWithLong:asset.defaultRepresentation.dimensions.height], @"height", nil];
-        
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
-      }
-    }
-  }
-  
+
   [weakSelf.commandDelegate sendPluginResult:result callbackId:weakSelf.currentCallbackId];
   [[picker presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }

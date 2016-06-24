@@ -67,7 +67,8 @@
         // 默认准许用户选择原图和视频, 你也可以在这个方法后置为NO
         _allowPickingOriginalPhoto = YES;
         _allowPickingVideo = NO;
-        
+        _pushToPhotoPickerVc = YES;
+
         if (![[TZImageManager manager] authorizationStatusAuthorized]) {
             _tipLable = [[UILabel alloc] init];
             _tipLable.frame = CGRectMake(8, 0, self.view.width - 16, 300);
@@ -133,7 +134,6 @@
 }
 
 - (void)pushToPhotoPickerVc {
-    _pushToPhotoPickerVc = YES;
     if (_pushToPhotoPickerVc) {
         TZPhotoPickerController *photoPickerVc = [[TZPhotoPickerController alloc] init];
         [[TZImageManager manager] getCameraRollAlbum:self.allowPickingVideo completion:^(TZAlbumModel *model) {
@@ -147,7 +147,6 @@
 - (void)pushToVideoPickerVc {
     if (_pushToVideoPickerVc) {
         TZPhotoPickerController *photoPickerVc = [[TZPhotoPickerController alloc] init];
-
         [[TZImageManager manager] getVideoAlbum:^(TZAlbumModel *model) {
             photoPickerVc.model = model;
             [self pushViewController:photoPickerVc animated:YES];

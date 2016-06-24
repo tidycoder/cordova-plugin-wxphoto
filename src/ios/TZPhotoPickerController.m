@@ -208,20 +208,21 @@
             [assets replaceObjectAtIndex:i withObject:model.asset];
 
             //for (id item in photos) { if ([item isKindOfClass:[NSNumber class]]) return; }
-            
-            if ([imagePickerVc.pickerDelegate respondsToSelector:@selector(imagePickerController:didFinishPickingPhotos:sourceAssets:)]) {
-                [imagePickerVc.pickerDelegate imagePickerController:imagePickerVc didFinishPickingPhotos:photos sourceAssets:assets];
+            if (i == _selectedPhotoArr.count - 1) {
+                if ([imagePickerVc.pickerDelegate respondsToSelector:@selector(imagePickerController:didFinishPickingPhotos:sourceAssets:)]) {
+                    [imagePickerVc.pickerDelegate imagePickerController:imagePickerVc didFinishPickingPhotos:photos sourceAssets:assets];
+                }
+                if ([imagePickerVc.pickerDelegate respondsToSelector:@selector(imagePickerController:didFinishPickingPhotos:sourceAssets:infos:isOrigin:)]) {
+                    [imagePickerVc.pickerDelegate imagePickerController:imagePickerVc didFinishPickingPhotos:photos sourceAssets:assets infos:infoArr isOrigin:_isSelectOriginalPhoto];
+                }
+                if (imagePickerVc.didFinishPickingPhotosHandle) {
+                    imagePickerVc.didFinishPickingPhotosHandle(photos,assets);
+                }
+                if (imagePickerVc.didFinishPickingPhotosWithInfosHandle) {
+                    imagePickerVc.didFinishPickingPhotosWithInfosHandle(photos,assets,infoArr);
+                }
+                [imagePickerVc hideProgressHUD];
             }
-            if ([imagePickerVc.pickerDelegate respondsToSelector:@selector(imagePickerController:didFinishPickingPhotos:sourceAssets:infos:isOrigin:)]) {
-                [imagePickerVc.pickerDelegate imagePickerController:imagePickerVc didFinishPickingPhotos:photos sourceAssets:assets infos:infoArr isOrigin:_isSelectOriginalPhoto];
-            }
-            if (imagePickerVc.didFinishPickingPhotosHandle) {
-                imagePickerVc.didFinishPickingPhotosHandle(photos,assets);
-            }
-            if (imagePickerVc.didFinishPickingPhotosWithInfosHandle) {
-                imagePickerVc.didFinishPickingPhotosWithInfosHandle(photos,assets,infoArr);
-            }
-            [imagePickerVc hideProgressHUD];
         }];
     }
 }
@@ -259,7 +260,7 @@
                 [imagePickerVc showAlertWithTitle:[NSString stringWithFormat:@"你最多只能选择%zd张照片",imagePickerVc.maxImagesCount]];
             }
         }
-         [UIView showOscillatoryAnimationWithLayer:weakLayer type:TZOscillatoryAnimationToSmaller];
+        [UIView showOscillatoryAnimationWithLayer:weakLayer type:TZOscillatoryAnimationToSmaller];
     };
     return cell;
 }
