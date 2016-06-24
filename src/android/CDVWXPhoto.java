@@ -86,6 +86,24 @@ public class CDVWXPhoto extends CordovaPlugin {
         return true;
     }
 
+   protected boolean pickVideo(CordovaArgs args, final CallbackContext callbackContext) {
+        this.callbackContext = callbackContext;
+
+        final CDVWXPhoto _this = this;
+
+        if(!PermissionHelper.hasPermission(this, permissions[0])) {
+            PermissionHelper.requestPermission(this, 0, Manifest.permission.READ_EXTERNAL_STORAGE);
+        } else {
+            this.getVideo();
+        }
+
+        PluginResult r = new PluginResult(PluginResult.Status.NO_RESULT);
+        r.setKeepCallback(true);
+        callbackContext.sendPluginResult(r);
+
+        return true;
+    }
+
     public void getPicture() {
         final CDVWXPhoto _this = this;
         PhotoPickerIntent intent = new PhotoPickerIntent(_this.cordova.getActivity());
@@ -95,6 +113,12 @@ public class CDVWXPhoto extends CordovaPlugin {
         //intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
         //startActivityForResult(intent, REQUEST_CAMERA_CODE);
         _this.cordova.startActivityForResult((CordovaPlugin) _this, intent, 1);
+    }
+
+    public void getVideo() {
+        final CDVWXPhoto _this = this;
+        VideoPickerIntent intent = new VideoPickerIntent(_this.cordova.getActivity());
+        _this.cordova.startActivityForResult((CordovaPlugin) _this, intent, 2);
     }
 
     public void onRequestPermissionResult(int requestCode, String[] permissions,
@@ -124,17 +148,32 @@ public class CDVWXPhoto extends CordovaPlugin {
         if (intent == null)
             return;
 
-        ArrayList<String> res = intent.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT);
-        Boolean isOrigin = intent.getBooleanExtra(PhotoPickerActivity.EXTRA_ORIGIN, false);
+        if (requestCode == 1) {
+            ArrayList<String> res = intent.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT);
+            Boolean isOrigin = intent.getBooleanExtra(PhotoPickerActivity.EXTRA_ORIGIN, false);
 
-        try {
-            JSONObject result = new JSONObject();
-            String url = res == null ? "null" : res.get(0);
-            result.put("url", url);
-            result.put("isOrigin", isOrigin);
-            this.callbackContext.success(result);
-        } catch (JSONException e) {
+            try {
+                JSONObject result = new JSONObject();
+                String url = res == null ? "null" : res.get(0);
+                result.put("url", url);
+                result.put("isOrigin", isOrigin);
+                this.callbackContext.success(result);
+            } catch (JSONException e) {
 
+            }
+        } else if (requestCode == 2) {
+            Video video = data.getParcelableExtra("video");
+
+            try {
+                JSONObject result = new JSONObject();
+                String url = res == null ? "null" : res.get(0);
+                result.put("url", video.url);
+                result.put("duration", video.duration);
+                this.callbackContext.success(result);
+            } catch (JSONException e) {
+
+            }
         }
+
     }
 }
