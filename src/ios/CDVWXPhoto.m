@@ -39,6 +39,85 @@
   }];
 }
 
+- (void)compressVideo:(CDVInvokedUrlCommand*)command
+{
+    self.currentCallbackId = command.callbackId;
+    [self.commandDelegate runInBackground:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString* sUrl = [command.arguments objectAtIndex:0];
+            NSURL* url = [NSURL URLWithString:sUrl];
+            NSString * saveVideopath = [NSString stringWithFormat:@"%@/Library/NBCache/%@/SaveVideo/",NSHomeDirectory(),@"123456789"];
+            if (![[NSFileManager defaultManager] fileExistsAtPath:saveVideopath]) {
+                NSError * error = nil;
+                
+                if ([[NSFileManager defaultManager] createDirectoryAtPath:saveVideopath withIntermediateDirectories:YES attributes:nil error:&error]){
+                    
+                    [self videoCompressionWith:url toVideoSavePath:saveVideopath];
+                } else {
+                    
+                    NSLog(@"%@",error);
+                }
+            } else {
+                [self videoCompressionWith:url toVideoSavePath:saveVideopath];
+            }
+        });
+    }];
+
+}
+
+-(void)videoCompressionWith:(NSURL *)url toVideoSavePath:(NSString*)saveVideopath
+{
+    __weak CDVWXPhoto* weakSelf = self;
+
+    
+    NSString * videoOutputPath = [self tempFilePath:@"mp4"];//[NSString stringWithFormat:@"%@23.mov",saveVideopath];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:videoOutputPath]) {
+        
+        AVURLAsset * urlAsset = [[AVURLAsset alloc] initWithURL:url options:nil];
+        AVAssetExportSession * exportSession = [AVAssetExportSession exportSessionWithAsset:urlAsset presetName:AVAssetExportPresetMediumQuality];
+        exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+        exportSession.outputURL = [NSURL fileURLWithPath:videoOutputPath];
+        NSLog(@"正在压缩");
+        
+        
+        [exportSession exportAsynchronouslyWithCompletionHandler:^{
+            
+            CDVPluginResult* result = nil;
+            NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                  videoOutputPath, @"destUrl", nil];
+
+            switch (exportSession.status) {
+                case AVAssetExportSessionStatusUnknown:
+                    NSLog(@"exportSession.status AVAssetExportSessionStatusUnknown");
+                    break;
+                case AVAssetExportSessionStatusWaiting:
+                    NSLog(@"exportSession.status AVAssetExportSessionStatusWaiting");
+                    break;
+                case AVAssetExportSessionStatusExporting:
+                    NSLog(@"exportSession.status AVAssetExportSessionStatusExporting");
+                    break;
+                case AVAssetExportSessionStatusCompleted:
+                    NSLog(@"exportSession.status AVAssetExportSessionStatusCompleted");
+                    result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+                    [weakSelf.commandDelegate sendPluginResult:result callbackId:weakSelf.currentCallbackId];
+                    break;
+                case AVAssetExportSessionStatusFailed:
+                    NSLog(@"exportSession.status AVAssetExportSessionStatusFailed");
+                    break;
+                case AVAssetExportSessionStatusCancelled:
+                    NSLog(@"exportSession.status AVAssetExportSessionStatusCancelled");
+                    break;
+                default:
+                    break;
+            }
+        }];
+    } else {
+//        [self videoHasExist:url filePath:videoOutputPath];
+    }
+}
+
+
 /// 用户点击了取消
 - (void)imagePickerControllerDidCancel:(TZImagePickerController *)picker {
   CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];

@@ -14,4 +14,5 @@
 
 - (void)pick:(CDVInvokedUrlCommand *)command;
 - (void)pickVideo:(CDVInvokedUrlCommand*)command;
+- (void)compressVideo:(CDVInvokedUrlCommand*)command;
 @end
