@@ -117,9 +117,11 @@ public class CDVWXPhoto extends CordovaPlugin {
         // GeneralUtils.checkForPermissionsMAndAbove(Main.this, true); 
         LoadJNI vk = new LoadJNI();
         try {
-            String workFolder = getApplicationContext().getFilesDir().getAbsolutePath();
+            String src = args.getString(0);
+            String workFolder = args.getString(1);
             String[] complexCommand = {"ffmpeg","-i", "/sdcard/videokit/in.mp4"};
-            vk.run(complexCommand , workFolder , getApplicationContext());
+            Context context=this.cordova.getActivity().getApplicationContext();
+            vk.run(complexCommand , workFolder, context);
             Log.i("test", "ffmpeg4android finished successfully");
         } catch (Throwable e) {
             Log.e("test", "vk run exception.", e);
