@@ -97,6 +97,7 @@
             <source-file src="src/android/CDVWXPhoto.java" target-dir="src/uuke/xinfu/wxphoto" />
             <source-file src="src/android/PermissionHelper.java" target-dir="src/uuke/xinfu/wxphoto" />
             <source-file src="src/android/libs/wxphoto.aar" target-dir="libs" />
+            <source-file src="src/android/libs/ffmpeg4android_lib-release.aar" target-dir="libs" />
 
 
         </platform>
