@@ -120,10 +120,18 @@ public class CDVWXPhoto extends CordovaPlugin {
         LoadJNI vk = new LoadJNI();
         try {
             String src = args.getString(0);
-            String workFolder = args.getString(1);
-            String[] complexCommand = {"ffmpeg","-i", "/sdcard/videokit/in.mp4"};
+            String name = args.getString(1);
+            String workFolder = this.cordova.getActivity().getApplicationContext().getFilesDir().getAbsolutePath();
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/uuke";
+
+            String[] complexCommand = {"ffmpeg","-y", "-i", src, "-strict","experimental","-s",
+                    "160x120","-r","25", "-vcodec", "mpeg4", "-b", "150k", "-ab","48000", "-ac", "2",
+                    "-ar", "22050", path+"/"+name};
             Context context=this.cordova.getActivity().getApplicationContext();
-            vk.run(complexCommand , workFolder, context);
+            vk.run(complexCommand, workFolder, context);
+            JSONObject result = new JSONObject();
+            result.put("url", path+"/"+name);
+            this.callbackContext.success(result);
             Log.i("test", "ffmpeg4android finished successfully");
         } catch (Throwable e) {
             Log.e("test", "vk run exception.", e);
@@ -191,10 +199,12 @@ public class CDVWXPhoto extends CordovaPlugin {
             }
         } else if (requestCode == 2) {
             Video video = intent.getParcelableExtra("video");
+            String coverUrl = intent.getStringExtra("coverUrl");
 
             try {
                 JSONObject result = new JSONObject();
                 result.put("url", video.path);
+                result.put("coverUrl", coverUrl);
                 result.put("duration", video.duration);
                 this.callbackContext.success(result);
             } catch (JSONException e) {
