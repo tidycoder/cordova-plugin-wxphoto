@@ -11,6 +11,7 @@ dependencies {
         exclude module: 'support-v4'
     }
     compile(name:'wxphoto', ext:'aar')
+    compile(name:'ffmpeg4android_lib-release', ext:'aar')
     compile('com.github.chrisbanes.photoview:library:+') {
         exclude module: 'support-v4'
     }

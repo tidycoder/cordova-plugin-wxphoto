@@ -40,6 +40,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.content.pm.PackageManager;
 
+import com.netcompss.ffmpeg4android.GeneralUtils;
+import com.netcompss.loader.LoadJNI;
+
 public class CDVWXPhoto extends CordovaPlugin {
 
     public CallbackContext callbackContext;
@@ -49,14 +52,20 @@ public class CDVWXPhoto extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+        this.callbackContext = callbackContext;
         if (action.equals("pick")) {
             return pick(args, callbackContext);
+        }
+        else if (action.equals("pickVideo")) {
+            return pickVideo(args, callbackContext);
+        }
+        else if (action.equals("compressVideo")) {
+            return compressVideo(args, callbackContext);
         }
         return false;
     }
 
     protected boolean pick(CordovaArgs args, final CallbackContext callbackContext) {
-        this.callbackContext = callbackContext;
 
         final CDVWXPhoto _this = this;
 
@@ -100,6 +109,21 @@ public class CDVWXPhoto extends CordovaPlugin {
         PluginResult r = new PluginResult(PluginResult.Status.NO_RESULT);
         r.setKeepCallback(true);
         callbackContext.sendPluginResult(r);
+
+        return true;
+    }
+
+    protected boolean compressVideo(CordovaArgs args, final CallbackContext callbackContext) {
+        // GeneralUtils.checkForPermissionsMAndAbove(Main.this, true); 
+        LoadJNI vk = new LoadJNI();
+        try {
+            String workFolder = getApplicationContext().getFilesDir().getAbsolutePath();
+            String[] complexCommand = {"ffmpeg","-i", "/sdcard/videokit/in.mp4"};
+            vk.run(complexCommand , workFolder , getApplicationContext());
+            Log.i("test", "ffmpeg4android finished successfully");
+        } catch (Throwable e) {
+            Log.e("test", "vk run exception.", e);
+        }
 
         return true;
     }
