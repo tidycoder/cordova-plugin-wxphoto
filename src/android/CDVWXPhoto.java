@@ -1,9 +1,11 @@
 package uuke.xinfu.wxphoto;
 
 
+import android.content.Context;
 import android.content.Intent;
 
 import uuke.xinfu.wxphoto.intent.PhotoPickerIntent;
+import uuke.xinfu.wxphoto.intent.VideoPickerIntent;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaArgs;
@@ -114,7 +116,7 @@ public class CDVWXPhoto extends CordovaPlugin {
     }
 
     protected boolean compressVideo(CordovaArgs args, final CallbackContext callbackContext) {
-        // GeneralUtils.checkForPermissionsMAndAbove(Main.this, true); 
+        // GeneralUtils.checkForPermissionsMAndAbove(Main.this, true);
         LoadJNI vk = new LoadJNI();
         try {
             String src = args.getString(0);
@@ -188,12 +190,11 @@ public class CDVWXPhoto extends CordovaPlugin {
 
             }
         } else if (requestCode == 2) {
-            Video video = data.getParcelableExtra("video");
+            Video video = intent.getParcelableExtra("video");
 
             try {
                 JSONObject result = new JSONObject();
-                String url = res == null ? "null" : res.get(0);
-                result.put("url", video.url);
+                result.put("url", video.path);
                 result.put("duration", video.duration);
                 this.callbackContext.success(result);
             } catch (JSONException e) {

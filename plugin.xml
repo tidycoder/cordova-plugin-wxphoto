@@ -90,6 +90,12 @@
                     android:configChanges="orientation|screenSize"/>
                 <activity android:name="uuke.xinfu.wxphoto.PhotoPreviewActivity"
                     android:theme="@style/PhotoPickerTheme"/>
+                <activity android:name="uuke.xinfu.wxphoto.VideoPickerActivity"
+                    android:theme="@style/PhotoPickerTheme"
+                    android:configChanges="orientation|screenSize"/>
+                <activity android:name="uuke.xinfu.wxphoto.VideoPreviewActivity"
+                    android:theme="@style/PhotoPickerTheme"
+                    android:configChanges="orientation|screenSize"/>
             </config-file>
 
             <framework src="src/android/rules.gradle" custom="true" type="gradleReference" />
