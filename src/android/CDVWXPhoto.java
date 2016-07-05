@@ -130,7 +130,7 @@ public class CDVWXPhoto extends CordovaPlugin {
             Context context=this.cordova.getActivity().getApplicationContext();
             vk.run(complexCommand, workFolder, context);
             JSONObject result = new JSONObject();
-            result.put("url", path+"/"+name);
+            result.put("destUrl", path+"/"+name);
             this.callbackContext.success(result);
             Log.i("test", "ffmpeg4android finished successfully");
         } catch (Throwable e) {
