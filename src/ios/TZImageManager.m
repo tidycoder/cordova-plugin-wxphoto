@@ -201,8 +201,9 @@
                 }
             }
             NSString *timeLength = type == TZAssetModelMediaTypeVideo ? [NSString stringWithFormat:@"%0.0f",asset.duration] : @"";
+            NSInteger dur = timeLength.integerValue;
             timeLength = [self getNewTimeFromDurationSecond:timeLength.integerValue];
-            [photoArr addObject:[TZAssetModel modelWithAsset:asset type:type timeLength:timeLength]];
+            [photoArr addObject:[TZAssetModel modelWithAsset:asset type:type timeLength:timeLength timeDuration:dur]];
         }];
         if (completion) completion(photoArr);
     } else if ([result isKindOfClass:[ALAssetsGroup class]]) {
@@ -222,8 +223,9 @@
                 type = TZAssetModelMediaTypeVideo;
                 NSTimeInterval duration = [[result valueForProperty:ALAssetPropertyDuration] integerValue];
                 NSString *timeLength = [NSString stringWithFormat:@"%0.0f",duration];
+                NSInteger dur = timeLength.integerValue;
                 timeLength = [self getNewTimeFromDurationSecond:timeLength.integerValue];
-                [photoArr addObject:[TZAssetModel modelWithAsset:result type:type timeLength:timeLength]];
+                [photoArr addObject:[TZAssetModel modelWithAsset:result type:type timeLength:timeLength timeDuration:dur]];
             } else {
                 [photoArr addObject:[TZAssetModel modelWithAsset:result type:type]];
             }
@@ -246,8 +248,9 @@
             }
         }
         NSString *timeLength = type == TZAssetModelMediaTypeVideo ? [NSString stringWithFormat:@"%0.0f",asset.duration] : @"";
+        NSInteger duration = timeLength.integerValue;
         timeLength = [self getNewTimeFromDurationSecond:timeLength.integerValue];
-        TZAssetModel *model = [TZAssetModel modelWithAsset:asset type:type timeLength:timeLength];
+        TZAssetModel *model = [TZAssetModel modelWithAsset:asset type:type timeLength:timeLength timeDuration:duration];
         if (completion) completion(model);
     } else if ([result isKindOfClass:[ALAssetsGroup class]]) {
         ALAssetsGroup *gruop = (ALAssetsGroup *)result;
@@ -266,8 +269,9 @@
                 type = TZAssetModelMediaTypeVideo;
                 NSTimeInterval duration = [[result valueForProperty:ALAssetPropertyDuration] integerValue];
                 NSString *timeLength = [NSString stringWithFormat:@"%0.0f",duration];
+                NSInteger dur = timeLength.integerValue;
                 timeLength = [self getNewTimeFromDurationSecond:timeLength.integerValue];
-                model = [TZAssetModel modelWithAsset:result type:type timeLength:timeLength];
+                model = [TZAssetModel modelWithAsset:result type:type timeLength:timeLength timeDuration:dur];
             } else {
                 model = [TZAssetModel modelWithAsset:result type:type];
             }

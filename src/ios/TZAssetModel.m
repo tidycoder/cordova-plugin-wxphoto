@@ -18,9 +18,10 @@
     return model;
 }
 
-+ (instancetype)modelWithAsset:(id)asset type:(TZAssetModelMediaType)type timeLength:(NSString *)timeLength {
++ (instancetype)modelWithAsset:(id)asset type:(TZAssetModelMediaType)type timeLength:(NSString *)timeLength timeDuration:(NSInteger)duration {
     TZAssetModel *model = [self modelWithAsset:asset type:type];
     model.timeLength = timeLength;
+    model.duration = duration;
     return model;
 }
 

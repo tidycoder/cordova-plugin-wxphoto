@@ -128,7 +128,7 @@
     __weak CDVWXPhoto* weakSelf = self;
     CDVPluginResult* result = nil;
 
-       PHAsset* phasset = (PHAsset*)asset;
+    PHAsset* phasset = (PHAsset*)asset;
     NSData* data = UIImageJPEGRepresentation(coverImage, 0.8);
     if (data) {
         NSString* extension = @"jpg";
