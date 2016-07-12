@@ -114,29 +114,34 @@ public class CDVWXPhoto extends CordovaPlugin {
 
         return true;
     }
-
     protected boolean compressVideo(CordovaArgs args, final CallbackContext callbackContext) {
         // GeneralUtils.checkForPermissionsMAndAbove(Main.this, true);
-        LoadJNI vk = new LoadJNI();
-        try {
-            String src = args.getString(0);
-            String name = args.getString(1);
-            String workFolder = this.cordova.getActivity().getApplicationContext().getFilesDir().getAbsolutePath();
-            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/uuke";
+        final LoadJNI vk = new LoadJNI();
+        final CDVWXPhoto _this = this;
+        final CordovaArgs _args = args;
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                try {
+                    String src = _args.getString(0);
+                    String name = _args.getString(1);
+                    String workFolder = _this.cordova.getActivity().getApplicationContext().getFilesDir().getAbsolutePath();
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/uuke";
 
-            String[] complexCommand = {"ffmpeg","-y", "-i", src, "-strict","experimental","-s",
-                    "160x120","-r","25", "-vcodec", "mpeg4", "-b", "150k", "-ab","48000", "-ac", "2",
-                    "-ar", "22050", path+"/"+name};
-            Context context=this.cordova.getActivity().getApplicationContext();
-            vk.run(complexCommand, workFolder, context);
-            JSONObject result = new JSONObject();
-            result.put("destUrl", path+"/"+name);
-            this.callbackContext.success(result);
-            Log.i("test", "ffmpeg4android finished successfully");
-        } catch (Throwable e) {
-            Log.e("test", "vk run exception.", e);
-        }
+                    String[] complexCommand = {"ffmpeg", "-y", "-i", src, "-strict", "experimental", "-s",
+                            "160x120", "-r", "25", "-vcodec", "mpeg4", "-b", "150k", "-ab", "48000", "-ac", "2",
+                            "-ar", "22050", path + "/" + name};
+                    Context context = _this.cordova.getActivity().getApplicationContext();
+                    vk.run(complexCommand, workFolder, context);
+                    JSONObject result = new JSONObject();
+                    result.put("destUrl", path + "/" + name);
+                    _this.callbackContext.success(result);
+                    Log.i("test", "ffmpeg4android finished successfully");
+                } catch (Throwable e) {
+                    Log.e("test", "vk run exception.", e);
+                }
+            }
 
+        });
         return true;
     }
 
