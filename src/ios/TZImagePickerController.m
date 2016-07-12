@@ -136,6 +136,7 @@
 - (void)pushToPhotoPickerVc {
     if (_pushToPhotoPickerVc) {
         TZPhotoPickerController *photoPickerVc = [[TZPhotoPickerController alloc] init];
+        photoPickerVc.onlyVideo = false;
         [[TZImageManager manager] getCameraRollAlbum:self.allowPickingVideo completion:^(TZAlbumModel *model) {
             photoPickerVc.model = model;
             [self pushViewController:photoPickerVc animated:YES];
@@ -147,6 +148,7 @@
 - (void)pushToVideoPickerVc {
     if (_pushToVideoPickerVc) {
         TZPhotoPickerController *photoPickerVc = [[TZPhotoPickerController alloc] init];
+        photoPickerVc.onlyVideo = true;
         [[TZImageManager manager] getVideoAlbum:^(TZAlbumModel *model) {
             photoPickerVc.model = model;
             [self pushViewController:photoPickerVc animated:YES];
@@ -301,6 +303,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     TZPhotoPickerController *photoPickerVc = [[TZPhotoPickerController alloc] init];
+    photoPickerVc.onlyVideo = _onlyVideo;
     photoPickerVc.model = _albumArr[indexPath.row];
     [self.navigationController pushViewController:photoPickerVc animated:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
