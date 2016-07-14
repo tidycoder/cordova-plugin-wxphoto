@@ -168,6 +168,7 @@
             if (group == nil) {
                 if (completion && albumArr.count > 0) completion(albumArr);
             }
+            [group setAssetsFilter:[ALAssetsFilter allVideos]];
             if ([group numberOfAssets] < 1) return;
             NSString *name = [group valueForProperty:ALAssetsGroupPropertyName];
             if ([name isEqualToString:@"Camera Roll"] || [name isEqualToString:@"相机胶卷"]) {
@@ -208,7 +209,10 @@
         if (completion) completion(photoArr);
     } else if ([result isKindOfClass:[ALAssetsGroup class]]) {
         ALAssetsGroup *gruop = (ALAssetsGroup *)result;
-        if (!allowPickingVideo) [gruop setAssetsFilter:[ALAssetsFilter allPhotos]];
+        if (!allowPickingVideo)
+            [gruop setAssetsFilter:[ALAssetsFilter allPhotos]];
+        else
+            [gruop setAssetsFilter:[ALAssetsFilter allVideos]];
         [gruop enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
             if (result == nil) {
                 if (completion) completion(photoArr);
@@ -429,7 +433,8 @@
         }
     } else {
         //@todo: judge video!!
-        [self.assetLibrary enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+        [self.assetLibrary enumerateGroupsWithTypes:ALAssetsGroupPhotoStream usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+            [group setAssetsFilter:[ALAssetsFilter allVideos]];
             if ([group numberOfAssets] < 1) return;
             NSString *name = [group valueForProperty:ALAssetsGroupPropertyName];
             if ([name isEqualToString:@"Camera Roll"] || [name isEqualToString:@"相机胶卷"]) {
