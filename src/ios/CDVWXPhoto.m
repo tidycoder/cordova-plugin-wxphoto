@@ -128,7 +128,6 @@
     __weak CDVWXPhoto* weakSelf = self;
     CDVPluginResult* result = nil;
 
-    PHAsset* phasset = (PHAsset*)asset;
     NSData* data = UIImageJPEGRepresentation(coverImage, 0.8);
     if (data) {
         NSString* extension = @"jpg";
@@ -142,11 +141,26 @@
             [[picker presentingViewController] dismissViewControllerAnimated:YES completion:nil];
             return;
         } else {
-            [[PHImageManager defaultManager] requestAVAssetForVideo:phasset options:nil resultHandler:^(AVAsset *avAsset, AVAudioMix *audioMix, NSDictionary *info) {
-                NSURL *url = (NSURL *)[(AVURLAsset *)avAsset URL];
-                NSLog(@"url = %@", [url absoluteString]);
-                NSLog(@"url = %@", [url relativePath]);
-                
+            if ([asset isKindOfClass:[PHAsset class]]) {
+                PHAsset* phasset = (PHAsset*)asset;
+                [[PHImageManager defaultManager] requestAVAssetForVideo:phasset options:nil resultHandler:^(AVAsset *avAsset, AVAudioMix *audioMix, NSDictionary *info) {
+                    NSURL *url = (NSURL *)[(AVURLAsset *)avAsset URL];
+                    NSLog(@"url = %@", [url absoluteString]);
+                    NSLog(@"url = %@", [url relativePath]);
+                    
+                    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                          filePath, @"coverUrl", url.absoluteString, @"url", nil];
+                    
+                    CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+                    
+                    [weakSelf.commandDelegate sendPluginResult:result callbackId:weakSelf.currentCallbackId];
+                    [[picker presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+                }];
+            } else {
+                ALAsset* alasset = (ALAsset*)asset;
+                NSURL* url = [[alasset defaultRepresentation] url];
+
+                NSLog(@"url = %@", url);
                 NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       filePath, @"coverUrl", url.absoluteString, @"url", nil];
                 
@@ -154,8 +168,7 @@
                 
                 [weakSelf.commandDelegate sendPluginResult:result callbackId:weakSelf.currentCallbackId];
                 [[picker presentingViewController] dismissViewControllerAnimated:YES completion:nil];
-            }];
-
+            }
         }
     }
 }
