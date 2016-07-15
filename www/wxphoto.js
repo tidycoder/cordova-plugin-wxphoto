@@ -7,5 +7,8 @@ module.exports = {
     },
     compressVideo: function(sourceUrl, destPath, successCallback, errorCallback) {
     	cordova.exec(successCallback, errorCallback, "WXPhoto", "compressVideo", [sourceUrl, destPath]);
+    },
+    initialize: function() {
+    	window.supportVideoUpload = true;
     }
 }
