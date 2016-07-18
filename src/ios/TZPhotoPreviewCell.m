@@ -46,8 +46,9 @@
         [_scrollView addSubview:_imageContainerView];
         
         _imageView = [[UIImageView alloc] init];
-        _imageView.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
+        _imageView.backgroundColor = [UIColor colorWithWhite:0.000 alpha:1.000];
         _imageView.clipsToBounds = YES;
+      _imageView.contentMode = UIViewContentModeScaleAspectFit;
         [_imageContainerView addSubview:_imageView];
         
         UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
@@ -70,26 +71,50 @@
 }
 
 - (void)resizeSubviews {
+  _scrollView.frame = CGRectMake(0, 0, self.width, self.height);
+  if (self.height >= self.width) {
     _imageContainerView.origin = CGPointZero;
     _imageContainerView.width = self.width;
     
     UIImage *image = _imageView.image;
     if (image.size.height / image.size.width > self.height / self.width) {
-        _imageContainerView.height = floor(image.size.height / (image.size.width / self.width));
+      _imageContainerView.height = floor(image.size.height / (image.size.width / self.width));
     } else {
-        CGFloat height = image.size.height / image.size.width * self.width;
-        if (height < 1 || isnan(height)) height = self.height;
-        height = floor(height);
-        _imageContainerView.height = height;
-        _imageContainerView.centerY = self.height / 2;
+      CGFloat height = image.size.height / image.size.width * self.width;
+      if (height < 1 || isnan(height)) height = self.height;
+      height = floor(height);
+      _imageContainerView.height = height;
+      _imageContainerView.centerY = self.height / 2;
     }
     if (_imageContainerView.height > self.height && _imageContainerView.height - self.height <= 1) {
-        _imageContainerView.height = self.height;
+      _imageContainerView.height = self.height;
     }
     _scrollView.contentSize = CGSizeMake(self.width, MAX(_imageContainerView.height, self.height));
     [_scrollView scrollRectToVisible:self.bounds animated:NO];
     _scrollView.alwaysBounceVertical = _imageContainerView.height <= self.height ? NO : YES;
     _imageView.frame = _imageContainerView.bounds;
+  }
+  else {
+    _imageContainerView.origin = CGPointZero;
+    UIImage *image = _imageView.image;
+    if (image.size.height / image.size.width > self.height / self.width) {
+      _imageContainerView.height = self.height;
+      _imageContainerView.width = floor(image.size.width * self.height / image.size.width);
+      _imageContainerView.centerX = self.width / 2;
+      _scrollView.contentSize = CGSizeMake(MAX(_imageContainerView.width, self.width), self.height);
+    } else {
+      _imageContainerView.width = self.width;
+      CGFloat height = image.size.height / image.size.width * self.width;
+      if (height < 1 || isnan(height)) height = self.height;
+      height = floor(height);
+      _imageContainerView.height = height;
+      _imageContainerView.centerY = self.height / 2;
+      _scrollView.contentSize = CGSizeMake(self.width, MAX(_imageContainerView.height, self.height));
+    }
+    [_scrollView scrollRectToVisible:self.bounds animated:NO];
+    _scrollView.alwaysBounceVertical = _imageContainerView.height <= self.height ? NO : YES;
+    _imageView.frame = _imageContainerView.bounds;
+  }
 }
 
 #pragma mark - UITapGestureRecognizer Event

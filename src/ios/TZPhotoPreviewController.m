@@ -27,6 +27,7 @@
     UILabel *_numberLable;
     UIButton *_originalPhotoButton;
     UILabel *_originalPhotoLable;
+  TZPhotoPreviewCell *_currentCell;
 }
 
 @end
@@ -121,6 +122,7 @@
     _numberImageView.backgroundColor = [UIColor clearColor];
     _numberImageView.frame = CGRectMake(self.view.width - 56 - 24, 9, 26, 26);
     _numberImageView.hidden = _selectedPhotoArr.count <= 0;
+  _numberImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     _numberLable = [[UILabel alloc] init];
     _numberLable.frame = _numberImageView.frame;
@@ -232,21 +234,21 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    TZPhotoPreviewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TZPhotoPreviewCell" forIndexPath:indexPath];
-    cell.model = _photoArr[indexPath.row];
+    _currentCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TZPhotoPreviewCell" forIndexPath:indexPath];
+    _currentCell.model = _photoArr[indexPath.row];
     
     __block BOOL _weakIsHideNaviBar = _isHideNaviBar;
-    __weak typeof(_naviBar) weakNaviBar = _naviBar;
-    __weak typeof(_naviBar) weakToolBar = _naviBar;
-    if (!cell.singleTapGestureBlock) {
-        cell.singleTapGestureBlock = ^(){
+    __weak UIView* weakNaviBar = _naviBar;
+    __weak UIView* weakToolBar = _naviBar;
+    if (!_currentCell.singleTapGestureBlock) {
+        _currentCell.singleTapGestureBlock = ^(){
             // show or hide naviBar / 显示或隐藏导航栏
             _weakIsHideNaviBar = !_weakIsHideNaviBar;
             weakNaviBar.hidden = _weakIsHideNaviBar;
             weakToolBar.hidden = _weakIsHideNaviBar;
         };
     }
-    return cell;
+    return _currentCell;
 }
 
 #pragma mark - Private Method
@@ -280,4 +282,15 @@
     }];
 }
 
+- (void)viewDidLayoutSubviews
+{
+  [super viewDidLayoutSubviews];
+  [_collectionView removeFromSuperview];
+  [self configCollectionView];
+  [_naviBar removeFromSuperview];
+  [self configCustomNaviBar];
+  [_toolBar removeFromSuperview];
+  [self configBottomToolBar];
+  if (_currentCell != NULL) [_currentCell resizeSubviews];
+}
 @end
