@@ -12,5 +12,7 @@
 @interface TZPhotoPickerController : UIViewController
 
 @property (nonatomic, strong) TZAlbumModel *model;
+@property  Boolean onlyVideo;
+
 
 @end

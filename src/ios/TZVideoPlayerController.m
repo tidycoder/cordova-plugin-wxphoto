@@ -109,6 +109,17 @@
 }
 
 - (void)okButtonClick {
+    if (_model.duration > 60) {
+        NSString* title = @"仅支持一分钟内的短视频";
+        if (iOS8Later) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"我知道了" style:UIAlertActionStyleDefault handler:nil]];
+            [self presentViewController:alertController animated:YES completion:nil];
+        } else {
+            [[[UIAlertView alloc] initWithTitle:title message:nil delegate:nil cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil] show];
+        }
+        return;
+    }
     TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
     if ([imagePickerVc.pickerDelegate respondsToSelector:@selector(imagePickerController:didFinishPickingVideo:sourceAssets:)]) {
         [imagePickerVc.pickerDelegate imagePickerController:imagePickerVc didFinishPickingVideo:_cover sourceAssets:_model.asset];
