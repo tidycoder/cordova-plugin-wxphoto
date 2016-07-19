@@ -284,13 +284,14 @@
 
 - (void)viewDidLayoutSubviews
 {
-  [super viewDidLayoutSubviews];
-  [_collectionView removeFromSuperview];
-  [self configCollectionView];
-  [_naviBar removeFromSuperview];
-  [self configCustomNaviBar];
-  [_toolBar removeFromSuperview];
-  [self configBottomToolBar];
-  if (_currentCell != NULL) [_currentCell resizeSubviews];
+    [super viewDidLayoutSubviews];
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*)_collectionView.collectionViewLayout;
+    layout.itemSize = CGSizeMake(self.view.width, self.view.height);
+    _collectionView.frame = CGRectMake(0, 0, self.view.width , self.view.height);
+    _collectionView.contentSize = CGSizeMake(self.view.width * _photoArr.count, self.view.height);
+    _naviBar.frame = CGRectMake(0, 0, self.view.width, 64);
+    _toolBar.frame = CGRectMake(0, self.view.height - 44, self.view.width, 44);
+    _okButton.frame = CGRectMake(self.view.width - 44 - 12, 0, 44, 44);
+    if (_currentCell != NULL) [_currentCell resizeSubviews];
 }
 @end
