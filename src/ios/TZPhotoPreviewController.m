@@ -27,6 +27,7 @@
     UILabel *_numberLable;
     UIButton *_originalPhotoButton;
     UILabel *_originalPhotoLable;
+  TZPhotoPreviewCell *_currentCell;
 }
 
 @end
@@ -121,6 +122,7 @@
     _numberImageView.backgroundColor = [UIColor clearColor];
     _numberImageView.frame = CGRectMake(self.view.width - 56 - 24, 9, 26, 26);
     _numberImageView.hidden = _selectedPhotoArr.count <= 0;
+  _numberImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     _numberLable = [[UILabel alloc] init];
     _numberLable.frame = _numberImageView.frame;
@@ -232,21 +234,21 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    TZPhotoPreviewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TZPhotoPreviewCell" forIndexPath:indexPath];
-    cell.model = _photoArr[indexPath.row];
+    _currentCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TZPhotoPreviewCell" forIndexPath:indexPath];
+    _currentCell.model = _photoArr[indexPath.row];
     
     __block BOOL _weakIsHideNaviBar = _isHideNaviBar;
     __weak UIView* weakNaviBar = _naviBar;
     __weak UIView* weakToolBar = _naviBar;
-    if (!cell.singleTapGestureBlock) {
-        cell.singleTapGestureBlock = ^(){
+    if (!_currentCell.singleTapGestureBlock) {
+        _currentCell.singleTapGestureBlock = ^(){
             // show or hide naviBar / 显示或隐藏导航栏
             _weakIsHideNaviBar = !_weakIsHideNaviBar;
             weakNaviBar.hidden = _weakIsHideNaviBar;
             weakToolBar.hidden = _weakIsHideNaviBar;
         };
     }
-    return cell;
+    return _currentCell;
 }
 
 #pragma mark - Private Method
@@ -280,4 +282,16 @@
     }];
 }
 
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*)_collectionView.collectionViewLayout;
+    layout.itemSize = CGSizeMake(self.view.width, self.view.height);
+    _collectionView.frame = CGRectMake(0, 0, self.view.width , self.view.height);
+    _collectionView.contentSize = CGSizeMake(self.view.width * _photoArr.count, self.view.height);
+    _naviBar.frame = CGRectMake(0, 0, self.view.width, 64);
+    _toolBar.frame = CGRectMake(0, self.view.height - 44, self.view.width, 44);
+    _okButton.frame = CGRectMake(self.view.width - 44 - 12, 0, 44, 44);
+    if (_currentCell != NULL) [_currentCell resizeSubviews];
+}
 @end

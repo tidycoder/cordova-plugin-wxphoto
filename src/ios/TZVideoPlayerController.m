@@ -16,6 +16,7 @@
 
 @interface TZVideoPlayerController () {
     AVPlayer *_player;
+    AVPlayerLayer *_playerLayer;
     UIButton *_playButton;
     UIImage *_cover;
     
@@ -41,9 +42,9 @@
     [[TZImageManager manager] getVideoWithAsset:_model.asset completion:^(AVPlayerItem *playerItem, NSDictionary *info) {
         dispatch_async(dispatch_get_main_queue(), ^{
             _player = [AVPlayer playerWithPlayerItem:playerItem];
-            AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
-            playerLayer.frame = self.view.bounds;
-            [self.view.layer addSublayer:playerLayer];
+            _playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
+            _playerLayer.frame = self.view.bounds;
+            [self.view.layer addSublayer:_playerLayer];
             [self addProgressObserver];
             [self configPlayButton];
             [self configBottomToolBar];
@@ -142,6 +143,15 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    _playerLayer.frame = self.view.bounds;
+    _playButton.frame = CGRectMake(0, 64, self.view.width, self.view.height - 64 - 44);
+    _toolBar.frame = CGRectMake(0, self.view.height - 44, self.view.width, 44);
+    _okButton.frame = CGRectMake(self.view.width - 44 - 12, 0, 44, 44);
 }
 
 @end
