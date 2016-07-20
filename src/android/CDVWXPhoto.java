@@ -127,8 +127,8 @@ public class CDVWXPhoto extends CordovaPlugin {
                     String workFolder = _this.cordova.getActivity().getApplicationContext().getFilesDir().getAbsolutePath();
                     String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/uuke";
 
-                    String[] complexCommand = {"ffmpeg", "-y", "-i", src, "-strict", "experimental", "-s",
-                            "480x360", "-r", "25", "-vcodec", "mpeg4", "-b", "900k", "-ab", "48000", "-ac", "2",
+                    String[] complexCommand = {"ffmpeg", "-y", "-i", src, "-strict", "experimental",
+                            "-r", "25", "-vcodec", "mpeg4", "-b", "900k", "-ab", "48000", "-ac", "2",
                             "-ar", "22050", path + "/" + name};
                     Context context = _this.cordova.getActivity().getApplicationContext();
                     vk.run(complexCommand, workFolder, context);
