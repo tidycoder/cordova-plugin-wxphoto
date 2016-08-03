@@ -53,6 +53,24 @@ public class CDVWXPhoto extends CordovaPlugin {
     protected final static String[] permissions = { Manifest.permission.READ_EXTERNAL_STORAGE };
 
     @Override
+    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+        super.initialize(cordova, webView);
+
+        String NOMEDIA=".nomedia";
+        File Folder = new File(Environment.getExternalStorageDirectory() + "/uuke");
+        if(Folder.mkdir() || Folder.isDirectory()) {
+            File nomediaFile = new File(Environment.getExternalStorageDirectory() + "/uuke/"+ NOMEDIA);
+            if(!nomediaFile.exists()){
+                try {
+                    nomediaFile.createNewFile();
+                } catch (Exception e) {
+                   Log.i("error", "nomedia failure!") ;
+                }
+            }
+        }
+    }
+    
+    @Override
     public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
         this.callbackContext = callbackContext;
         if (action.equals("pick")) {
