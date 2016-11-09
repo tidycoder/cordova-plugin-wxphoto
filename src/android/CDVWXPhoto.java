@@ -223,10 +223,14 @@ public class CDVWXPhoto extends CordovaPlugin {
             Boolean isOrigin = intent.getBooleanExtra(PhotoPickerActivity.EXTRA_ORIGIN, false);
 
             try {
-                JSONObject result = new JSONObject();
-                String url = res == null ? "null" : res.get(0);
-                result.put("url", url);
-                result.put("isOrigin", isOrigin);
+                JSONArray result = new JSONArray();
+                for (int i = 0; res != null &&  i < res.size(); ++i) {
+                    JSONObject obj = new JSONObject();
+                    String url = res.get(0);
+                    obj.put("url", url);
+                    obj.put("isOrigin", isOrigin);
+                    result.put(i, obj);
+                }
                 this.callbackContext.success(result);
             } catch (JSONException e) {
 
