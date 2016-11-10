@@ -226,7 +226,7 @@ public class CDVWXPhoto extends CordovaPlugin {
                 JSONArray result = new JSONArray();
                 for (int i = 0; res != null &&  i < res.size(); ++i) {
                     JSONObject obj = new JSONObject();
-                    String url = res.get(0);
+                    String url = res.get(i);
                     obj.put("url", url);
                     obj.put("isOrigin", isOrigin);
                     result.put(i, obj);
